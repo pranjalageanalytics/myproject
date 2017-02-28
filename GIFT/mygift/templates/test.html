@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static from staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+ 
+    
+</head>
+<body style="background-color: #DCD3D1;">
+
+{% for form in qs %}
+	
+	
+	<center>
+	
+								<div style=" width: 300px;border: 1px solid green; padding: 25px;margin: 25px; >
+
+								<div class="row">
+									 
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											{{form.verb}}
+											
+											
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+           									
+           								{{form.timestamp}}
+           
+          								</div>	
+          							
+										
+							
+
+									</div>
+								</div>
+			</center>		
+			
+			
+			
+         
+      		
+
+{%endfor%}
+</body>
+</html>

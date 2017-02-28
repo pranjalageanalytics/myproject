@@ -1,0 +1,198 @@
+{% extends "base4.html" %}
+{% load static from staticfiles %}
+{% block head %}
+<!DOCTYPE html> 
+ <title>Gift Web</title>
+ 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+ <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+  
+ 
+ <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" media="all">
+ 
+ <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+ 
+ <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="all">
+ 
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+  <link href="{% static 'css/jquery-ui.css' %}" type="text/css" rel="stylesheet" media="all">
+  
+  <script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
+  
+  <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+   <script src="{% static 'js/location.js' %}"></script>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+::-webkit-input-placeholder { text-align:center; }
+</style>
+
+<script>
+allValues=[]
+function loctionredirect(){
+ //alert("click cancel");
+ 
+ var checkboxes=$("#cat").contents().find(':checkbox');
+     
+    for (var i = 0; i < checkboxes.length; i++)
+       {
+           if(checkboxes[i].checked==true)
+            {
+             console.log('k',checkboxes[i].value);
+             allValues.push(checkboxes[i].value)
+             var cat=allValues.toString();
+            }
+       }
+ 
+        var len= allValues.length
+        
+        if(len>0){
+         
+         
+          window.location.href="http://192.168.1.129:8063/home/challenge/"
+        }
+        else{
+          window.location.href="http://192.168.1.129:8063/home/category_unselect/"
+         
+        }
+ 
+}
+ 
+</script>
+<script>
+$(document).ready(function(){
+	console.log("start");
+	var list={{obj}};
+	console.log("listttt"+list);
+	
+	for(i=0;i<list.length;i++)
+		{
+		 console.log(list[i]);
+		 loc =(list[i]);
+		 console.log(loc);
+		 
+		 $(":checkbox").filter(function() {
+			 console.log("check");
+		        return this.value == loc;
+		        console.log("checkkkk");
+		    }).prop("checked", "true");
+		} 
+	
+			
+	/* $("#loc").click(function(){
+	    $("demo").hide();
+	}); */
+	$("#demo").show();
+/*  	$("#dataloc").click(function(){
+		$("#demo").toggle();
+	});
+  */
+	$("#searchimg").click(function(){
+		$("#myInput").focus();
+	})
+	
+
+	
+	//$("input[type=checkbox][value=5]").attr("checked","true");
+	
+});
+
+</script>
+
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i,b;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+	ul = document.getElementById("demo");
+    li = ul.getElementsByClassName("list-group-item");
+	
+	
+    for (i = 0; i < li.length; i++) {
+		a = li[i].innerHTML.toUpperCase();
+		//alert(a.indexOf(filter));
+		if (a.indexOf(filter) > -1) {
+		    li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+</script>
+{% endblock %}
+{% block content %}
+<div id="demo1"style="cursor: pointer;background-color:#f5f5f5;color:green;opacity:0.8; height:52px;display:none;"></div>
+<div class="container">
+  <h2>Location</h2>
+  
+<div id="dataloc" style="border:solid;   border-color: #EFF5FB;height:3opx;width:1140px;border-radius:10px;" >
+
+<img src="{% static 'image/location.jpg' %}"height=40px, width= 40px, style="padding:5px;">
+ <a href="#demo" style="font-size:20px;">Select  your location</a>
+
+ <img id="searchimg" src="{% static 'image/search.png' %}"height=30px, width= 30px, style="padding:5px;float:right;margin-top:3px;margin-right:3px;">
+ <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for location" title="Type in a name" style="float:right;border-color: #EFF5FB;height:30px;width:180px;margin-top:5px;margin-right:10px;"> 
+
+
+ </div>
+
+  	<form id="location-form" method="POST" action="{% url 'home:category' %}" >
+  	  {% csrf_token %}
+  <div id="demo" class="collapse" style="margin-top:10px;">
+    	
+  	{% for k in object_list%}
+  	
+  	
+	  <li class="list-group-item"><label>{{k.city}}</label><input type="checkbox" id="check" class="demo faChkRnd1 pull-right" name="location" value="{{k.id}}"></li>
+			
+			
+				 
+	{% endfor %} 
+	</br>
+	<input type="button" id="locationclick"  class="btn btn-default" value="Ok" style="float:right;background-color: #0072BC;color: white;width: 97px;margin-top:-8px; ">
+		 
+	<input type="button" onclick="loctionredirect()" class="btn btn-default" Value="Cancel" style="float:right;background-color: #0072BC;color: white;width: 97px;margin-top:-8px;margin-right:4px;">
+	 </form>
+	 </div>
+
+</div>
+<!-- <center> 
+<div style="height:300px;width:300px;margin-top:20px;">
+  
+            
+              <div class="row" style="background-color:#0072BC;color:white;line-height: 2.428571;height: 35px;">
+              <h5 style="margin-left: 18px;">Popular Locations</h5>
+              </div>
+              
+  
+  	<form id="location-form" >
+  	<div id="location">
+  	
+  	{% for k in object_list%}
+  	
+  	
+	  <li class="list-group-item"><label>{{k.city}}</label><input type="checkbox" id="check" class="demo faChkRnd1 pull-right" name="location" value="{{k.id}}"></li>
+				 
+	{% endfor %} 
+	
+	</br>
+	
+ 
+            
+                 <input type="button" class="btn btn-default" value="Update" style="background-color: #0072BC;color: white;width: 97px;margin-top:-8px;" onclick=" window.location.reload();">
+					<a href="{% url 'home:category' %}"><input type="button"  class="btn btn-default" Value="Next" style="background-color: #0072BC;color: white;width: 97px;margin-top:-8px;"></a>
+		    	</div>
+		    
+		    	</form>
+</div>
+<center> -->
+
+
+
+{% endblock %}

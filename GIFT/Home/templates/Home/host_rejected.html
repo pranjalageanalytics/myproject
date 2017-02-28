@@ -1,0 +1,68 @@
+{% extends "base3.html" %}
+{% load static from staticfiles %}
+
+<style>
+a:focus {
+    outline: 0px auto -webkit-focus-ring-color;
+    }
+</style>
+
+{% block content %}
+<style>
+.close:hover
+{
+color:white	;
+}
+.close{
+color:white;
+}
+</style>
+
+<nav class="navbar-inverse">
+  <div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);">
+     
+ 
+    <ul class="nav navbar-nav mychellge">
+     
+       
+       <li><a href="{% url 'home:host' %}" class="navbtn" role="button">My Challenges</a></li>
+       
+      
+      
+    </ul>
+    
+    <div class="col-sm-3 col-md-3 pull-right" style="margin-left: -11px;">
+        <form class="navbar-form" role="search">
+        
+        
+        <div class="input-group ">
+            <input type="text" class="form-control" placeholder="Search" name="q">
+            <div class="input-group-btn">
+                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        </form>
+    </div>
+    
+  
+  </div>
+
+</nav>
+<center>
+  <div class="form-activate forgetpass" style="margin-top: 55px;">
+ 
+  
+   <div class="form-group">
+       <label for="text" style="color: #0072bc; font-size: 18px;">Greetings from GIFT Team.  Your request to Host subscription has been declined.  Kindly contact us for further details (Email / Phone)
+         </label>
+         
+      </div>
+      
+  
+          
+      </div>
+      </center>
+
+
+
+{% endblock %}

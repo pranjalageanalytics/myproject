@@ -1,0 +1,54 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+
+
+{% block content %}
+
+<style>
+
+table {
+    counter-reset: tableCount;     
+}
+.counterCell:before {              
+    content: counter(tableCount); 
+    counter-increment: tableCount; 
+}
+
+</style>
+
+<br><br>
+<div class="container">
+  <div class="jumbotron">
+ 
+ 
+<label style="color: #0072bc; font-size: 16px;">Ranking</label>             
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Participant Name</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+   
+    <tbody>
+     {% for obj in object %}
+      <tr>
+    
+        <td class="counterCell"></td>
+      
+        <td>{{obj.gift_user}}</td>
+        <td>{{obj.gifter_point}}</td>
+        
+      </tr>
+      
+     
+         {% endfor %}
+      
+    </tbody>
+  </table>
+</div>
+</div>
+   
+{% endblock %} 

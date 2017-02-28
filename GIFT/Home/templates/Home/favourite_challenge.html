@@ -1,0 +1,334 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+
+	 /*  if(window.location.href.indexOf('#selectcategory') != -1) {
+	    $('#selectcategory').modal('show'); */
+	 $(".infobtn").click(function() {
+		var primary= $(this).parents('.row').find(':input').val();
+		//alert(primary);
+		 
+
+	    // ...
+	});
+
+
+	});
+
+$(document).ready(function(){
+  $(document).on('click', '.custOverlay', function(){ 
+   $(this).parent().find(".close").trigger("click");
+  });
+});
+
+$(document).on('click', '.infobtn1', function(){ 
+	
+	//alert("get pk");	
+	//alert("ID"+$(this).attr('id'))
+	var id1=$(this).attr('id');
+	console.log(id1);
+	$( ".gethidden1" ).each(function( index ) {
+		//alert("hid_id"+$(this).attr('id'))
+		var id2=$(this).attr('id');
+  console.log( index + ": " + $( this ).text() );
+		if(id1==id2){
+			//alert("hid_val"+$(this).val())
+			var accp_id=$(this).val();
+	
+	
+	$(".favourite").attr("action", "/home/unfavouritechallenge/" + accp_id); 
+
+		}
+	});
+	
+	
+});
+
+</script>
+
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i,b;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByClassName("container");
+ 
+ 
+    for (i = 0; i < li.length; i++) {
+    a = li[i].innerHTML.toUpperCase();
+    //alert(a.indexOf(filter));
+    if (a.indexOf(filter) > -1)
+    {
+      li[i].style.display = "";
+      
+     } 
+    else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+</script>
+
+<nav class="navbar-inverse">
+  <div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);">
+     
+ 
+      <div class="col-sm-3 col-md-3 pull-right" style="margin-left: -11px;">
+        <form class="navbar-form" role="search">
+        
+        
+        <div class="input-group ">
+            <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Search" name="q">
+            <div class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        </form>
+    </div>
+    
+    
+  </div>
+</nav>
+
+<div class="content" id="myUL">
+
+{% for obj in object_list %}
+<div class="container" style="padding-top: 35px;">
+
+
+<div class="form-challenge" style="padding:2px;">
+<div class="row">
+
+<div class="col-md-4">
+{% if obj.photo %}
+<img src="{{ obj.photo }}" style="width: 400px;height: 250px;" class="img_challenge">
+{% else %}
+<img src="{% static 'image/learn_to_run2.jpg' %}" class="img_challenge">                                 
+{% endif %}
+
+</div>
+
+<div class="col-md-8 form">
+ <input type="hidden" id="status" name="status" value="{{obj.status}}">
+ <!-- {{obj.status}} -->
+<h4><b><div style="padding-left: 80px;">{{obj.user_challenge_category_location.challenge.title}}</div></b></h4>
+
+<div class="row">
+<input type="hidden" id="{{ forloop.counter0 }}" name="getpk" class="gethidden1" value="{{obj.user_challenge_category_location.pk}}">
+<div class="col-md-8">
+<div style="padding-left: 80px; padding-top: 20px;"><h4>Participants Joined-&nbsp;&nbsp;{{obj.user_challenge_category_location.challenge.accepted_volenteers_by_host}}</h4></div>
+{% for key, value in obj.user_challenge_category_location.user.items %}
+<div style="padding-left: 80px;"><h4>Created By -{{value.organization}}</h4></div>
+{% endfor %}
+<a href="#" role="button" id="show" data-toggle="modal" data-target='#cat{{ forloop.counter0 }}'  style="padding-left: 80px;color:#0072BC;">Click here for Category</a>
+    
+
+<div class="modal fade" id="cat{{ forloop.counter0 }}"  role="dialog">
+    <div class="modal-dialog" style="width:20%;">
+       <div class="modal-content" style="margin-top: 231px;">
+        <div class="modal-header" style="padding: 0px;">
+           <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+          <h4 class="modal-title" style="background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;padding-left:20px;">Categories</h4>
+        </div>
+        <div class="modal-body">
+          {% for cat in obj.user_challenge_category_location.categorytype %}
+          <div><h4>{{cat}}</h4></div>
+          {% endfor %} 
+        </div>
+        <div class="modal-footer">
+          <a href="#"><button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #0072BC;color: white;width: 97px; margin-left:70px;">OK</button></a>
+        </div>
+        
+        
+      </div>
+    </div>
+</div>
+
+<div style="padding-left: 80px;"><h5><b>Challenge Date:</b>&nbsp;&nbsp;{{obj.user_challenge_category_location.challenge.start_date}} To {{obj.user_challenge_category_location.challenge.end_date}}</h5></div>
+<div style="padding-left: 80px; font-size=16px;" class="abc"><h5><b>Challenge Time:</b>&nbsp;&nbsp;{{obj.user_challenge_category_location.challenge.start_time}} To {{obj.user_challenge_category_location.challenge.end_time}}</h5></div>
+<div style="padding-left: 80px; font-size=16px; color: #0072BC;">Registration Closes on - {{obj.user_challenge_category_location.challenge.reg_expire_date}}</div>
+
+</div><!-- end col -->
+
+<div class="infobtn">
+ <a href="#"> <button type="button" class="btn btn-primary challbtn modal_get" data-toggle="modal" data-target="#infomodal{{ forloop.counter0 }}">MORE INFO</button></a>
+</div>
+
+<div class="infobtn">
+<div><button type="button" class="btn btn-primary challbtn share-btn" data-toggle="modal" data-target="#sharemodal{{ forloop.counter0 }}"style="width: 100px;">SHARE</button></div>
+</div>
+
+<div class="infobtn">
+ <a href="#" button type="button" class="infobtn1 {{obj.user_challenge_category_location.pk}}" id="{{ forloop.counter0 }}"  data-toggle="modal" data-target="#rating{{ forloop.counter0 }}"><img src="{% static 'image/favorite.png' %}"  style="height: 30px; margin-left: 30px;"> </button></a>
+</div>
+
+</div> <!-- End row -->
+
+<div class="modal fade" id="sharemodal{{ forloop.counter0 }}" role="dialog">
+   <div class="custOverlay"></div>
+    <div class="modal-dialog modal-sm">
+         <div class="modal-content" style="margin-top: 150px;">
+        
+      <div class="modal-header" style="padding: 0px;">
+           <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+           <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Share Challenge</h4>
+       </div>
+       
+        <div class="modal-body">
+         <br>
+          <div class="fb-share-button" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+           <a class="fb-xfbml-parse-ignore  btn btn-block btn-social btn-twitter" target="_blank" href="https://twitter.com/intent/tweet/?text={{obj.user_challenge_category_location.user.user.organization}},has invited you to help him on his challenge title {{obj.user_challenge_category_location.challenge.title}} . To Join him, download the App: link &url=https://www.dropbox.com/sh/oon28w04k3w8awo/AACk6O6muTgkrK9f1NmSXfNka?dl=0">
+           <span class="fa fa-twitter"></span> Sign in with Twitter</a>
+          </div>
+        
+         <br>
+         
+          <div class="fb-share-button" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+           <a class="fb-xfbml-parse-ignore  btn btn-block btn-social btn-google" target="_blank" href="https://plus.google.com/share?url=https://www.dropbox.com/sh/oon28w04k3w8awo/AACk6O6muTgkrK9f1NmSXfNka?dl=0&text={{obj.user_challenge_category_location.user.user.organization}},has invited you to help him on his challenge title {{obj.user_challenge_category_location.challenge.title}} . To Join him, download the App: link">
+           <span class="fa fa-google"></span> Sign in with Google</a>
+          </div>
+           
+          <br>
+          <div class="fb-share-button" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+         
+          <a class="fb-xfbml-parse-ignore  btn btn-block btn-social btn-facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dropbox.com/sh/oon28w04k3w8awo/AACk6O6muTgkrK9f1NmSXfNka?dl=0&description={{obj.user_challenge_category_location.user.user.organization}},has invited you to help him on his challenge title {{obj.user_challenge_category_location.challenge.title}} . To Join him, download the App: link">
+           <span class="fa fa-facebook"></span> Sign in with Facebook</a>
+          
+           </div>
+          
+       
+       
+          <div class="modal-footer">
+         
+           <!-- <button type="button" class="btn btn-primary challbtn cancel-btn" data-dismiss="modal">Cancel</button> -->
+         </div>  
+         
+        </div>
+       </div>
+   </div>
+</div>
+
+
+
+<div class="modal fade" id="rating{{ forloop.counter0 }}" role="dialog">
+<div class="custOverlay"></div>
+    <div class="modal-dialog modal-sm">
+     <div class="modal-content" style="margin-top: 231px;">
+       <div class="modal-header" style="padding: 0px;">
+           <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+           <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Unfavourite Challenge</h4>
+        
+        </div>
+        <div class="modal-body">
+         <form id="favourite"  class="favourite" action="" method="POST" >
+      {% csrf_token %}
+          <p>Do you want to make Unfavourite this challenge.</p>
+       
+        <div class="modal-footer" style="margin-left: 50px;">
+           <button type="submit" class="btn btn-primary challbtn share-btn" style="width: 30%;" >Ok</button>
+           <button type="button" class="btn btn-primary challbtn share-btn" data-dismiss="modal">Cancel</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+ 
+<div class="modal fade" id="infomodal{{ forloop.counter0 }}"  role="dialog">
+
+<div class="modal-dialog">
+   
+<div class="modal-content">
+        <div class="modal-header" style="padding: 0px;">
+           <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+          <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Challenge Information</h4>
+        </div>
+<div class="modal-body">
+
+<div class="form-challenge" style="padding:2px;">
+<div class="row">
+<div class="col-md-10">
+<div  style="padding-left: 40px;"><h4><b>Title:&nbsp;</b>{{obj.user_challenge_category_location.challenge.title}}</b></h4></div>
+<div style="padding-left: 40px;"><h4><b>Accepted volenteers:&nbsp;&nbsp;</b>{{obj.user_challenge_category_location.challenge.accepted_volenteers_by_host}}&nbsp;Joined</h4></div>
+{% for key, value in obj.user_challenge_category_location.user.items %}
+<div style="padding-left: 40px;"><h4><b>Created By</b>-{{value.organization}} </h4></div>
+{% endfor %}
+
+<div style="padding-left: 40px;"><h4><b>Categories:&nbsp;</b>
+{% for cat in obj.user_challenge_category_location.categorytype %}
+{{cat}},{% endfor %}</h4>
+</div>
+
+<div style="padding-left: 40px;"><h4><b>Challenge Date:&nbsp;</b>{{obj.user_challenge_category_location.challenge.start_date}} To{{obj.user_challenge_category_location.challenge.end_date}}</h4></div>
+<div style="padding-left: 40px;"><h4><b>Challenge Time per Day:&nbsp;</b>{{obj.user_challenge_category_location.challenge.start_time}} To  {{obj.user_challenge_category_location.challenge.end_time}}</h4></div>
+<div style="padding-left: 40px;"><h4><b>Location:</b>
+{% for loc in obj.user_challenge_category_location.locationtype %}
+{{loc}},{% endfor %}
+</h4>
+</div>
+<div style="padding-left: 40px;"><h4><b>Venue:&nbsp;</b>{{obj.user_challenge_category_location.challenge.venue}} </h4></div>
+<div style="padding-left: 40px;"><h4><b>Contact:&nbsp;</b>{{obj.user_challenge_category_location.challenge.contact_no}} </h4></div>
+<div style="padding-left: 40px;"><h4><b>Description:&nbsp;</b>{{obj.user_challenge_category_location.challenge.description}}</h4></div>
+<div style="padding-left: 40px;"><h4><b>Direction:&nbsp;</b>{{obj.user_challenge_category_location.challenge.direction}}</h4></div>
+{% for key, value in obj.user_challenge_category_location.user.items %}
+<div style="padding-left: 40px;"><h4><b>Email:&nbsp;</b>{{value.email}}</h4></div>
+{% endfor %}
+
+<div style="padding-left: 40px;"><h4><b>Host Rating:&nbsp;</b>
+{% if obj.user_challenge_category_location.host_rating %}
+{{obj.user_challenge_category_location.host_rating.host_rating}}&nbsp;
+{% else %}
+5&nbsp;
+{% endif %}
+<img src="{% static 'image/rank1.png' %}"></h4></div>
+
+</br>
+
+<div style="padding-left: 40px;margin-top:-30px; "font-size:20px;"><h4><b>Registration Closes on:&nbsp;{{obj.user_challenge_category_location.challenge.reg_expire_date}}</b></h4></div>
+</div><!-- End col -->
+
+</div><!-- End row -->
+<br>
+
+
+</div><!-- End form-challenge -->
+
+<br>
+</div><!-- End Modal-body -->
+
+      
+</div><!-- End Modal-content-->
+</div><!-- End Modal-dialog -->
+    
+</div><!-- End Modal-fade -->
+  
+</div><!-- End col -->
+
+
+</div><!-- End Row -->
+</div><!-- End Form-challenge -->
+</div><!-- End Container -->	
+
+{% endfor %}
+
+</div>
+{% if challenge %}
+<center>
+  <div class="form-activate forgetpass" style="margin-top:135px;">
+  <img id="img_logo1" src="{% static 'image/gift2.png' %}" style="width:220px;">
+   <div class="form-group">
+   		<label for="text" style="color: #0072bc; font-size: 18px;">{{challenge}}</label>
+   </div>
+  </div>
+</center>
+  {% endif %} 
+
+{% endblock %}

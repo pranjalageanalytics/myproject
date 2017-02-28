@@ -1,0 +1,29 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+
+
+{% block content %}
+<nav class="navbar-inverse">
+<div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);padding-bottom: 12px;padding-top: 10px;">
+ <div class="nav navbar-nav disclaimer pull-right"> 
+     <img src="{% static 'image/rss.png' %}" class="img_rss" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;">RSS</span>
+      <img src="{% static 'image/Email.png' %}" class="img_Email" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;"> EMAIL</span>
+      <img src="{% static 'image/twitter.png' %}" class="img_twitter" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"> <span style="padding-left: 5px;margin-top: 115px;font-size: 12px;">TWITTER</span>
+      <img src="{% static 'image/square-facebook.png' %}" class="img_facebook" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;"> FACEBOOK </span>   
+    </div>
+    
+  </nav>
+  
+  <div class="container">  
+    <h3>Disclaimers:</h3>
+    <p>Company X provides the[www address] web site as a service to the public and the Website owners. </p>
+    
+    <p><br>Company X is not responsible for, and expressly disclaims all liability for, damages of any kind arising out of use,reference to,<br>or reliance on any information contained within the site.</br>While the information contained within the site is periodically updated,<br>no guarantee is given that the information provided in this web site is correct,complete,and up-to-date. </p>
+    <p>Although the company X web site may include links providing direct  access  to other Internet resources,<br>including Web sites,Company X is not responsible for the accuracy of content of information contained in these sites</br>
+    </p>
+    <p>Links from Company X to third-party sites do not constitute an endorsement by Company X <br>of the parties or thier products and services.The appearance on the Web site of<br>advertisements and product or service information does not constitute an endorsement by</br>Company X,and Company X has not investigated the claims made by any advertiser.<br>Product information is based solely on material received from suppliers</br></p>
+   </div>
+   </div>
+   
+{% endblock %} 

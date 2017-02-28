@@ -1,0 +1,210 @@
+{% extends "base3.html" %}
+{% load static from staticfiles %}
+
+
+
+
+{% block content %}
+
+<script src="{% static 'js/host_update.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+ //alert("hiii");
+
+  
+   $(function() {
+     var $radios = $('input:radio[name=gender]');
+     if($radios.is(':checked') === false) {
+         $radios.filter('[value={{gender}}]').prop('checked', true);
+     }
+     
+ }); 
+ 
+
+ 
+    
+});
+</script>
+<script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+                $('#datepicker').datepicker({
+                    format: "yyyy-mm-dd"
+                });  
+            
+            });
+        </script>
+
+
+
+
+<div class="container">
+{% if update %}
+ <ul class="noty-wrapper i-am-new" id="noty_top">
+    <li class="bg-green" style="cursor: pointer;background-color:#f5f5f5;color:green;opacity:0.8; height:52px;">
+       <div class="noty_bar" id="noty_453371394759536000">
+ <div class="noty_message"><span class="noty_text">
+            <i class="fa fa-times" aria-hidden="true" id="cog"></i>&nbsp;&nbsp; {{update}}</span>
+          </div>
+          </div></li></ul>
+           {% endif %}
+ <form action="" method="POST" enctype='multipart/form-data'>
+      {% csrf_token %}
+  <br><br>
+    <div class="row field">
+    <div class="form-group">
+      
+      <br>
+		  <div style="padding-bottom: 15px;">
+   
+            {% if gifter_success == 'Success' %}
+  
+         <button type="button" class="btn1 btn-default" data-toggle="modal" data-target="#giftermodal"    style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Switch Gifter</button>
+    {% else %}
+          <a href="{% url 'home:gifter_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Gifter</button> </a>
+     
+       {% endif %} 
+ 
+    </div>		 
+		</div>  
+		<hr>
+    <div class="col-md-6">
+    <div class="form-group">
+      <label for="name">Host/Organisation name</label>
+      <input type="text" class="form-control form-control1 fsize" id="name" disabled name="organization" value="{{object.organization}}">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+     <input type="email" class="form-control form-control1 fsize field left" id="email" disabled name="email"  value={{email}} >
+    </div>
+    
+    <div class="form-group">
+      <label for="text">Home Town</label>
+      <input type="text" class="form-control1 fsize" id="text"  name="hometown" value="{{object.hometown}}" >
+    </div>
+    
+    <div class="form-group">
+      <label for="date">DOB</label>
+      <input type="text" class="form-control1 fsize" id="datepicker" name="dob" value={{object.date_of_birth}}>
+       <div id="dob_error" style="color:red;"></div>
+    </div>
+
+     <div class="form-group">
+      <label for="date">Full Name</label>
+      {% if object.full_name %}
+      <input type="dob" class="form-control form-control1 fsize" name="fullname"  value="{{object.full_name}}">
+      {% else %}
+        <input type="dob" class="form-control form-control1 fsize" name="fullname"  value="">
+        {% endif %}
+    </div>
+     
+    <div class="form-group">
+      <label for="text" style="color: black;">Gender</label>
+      <br>
+		  <div style="padding-bottom: 15px;">
+		    <label class="radio-inline">
+		      <input type="radio" name="gender" value="Male">Male
+		    </label>
+		    <label class="radio-inline">
+		      <input type="radio" name="gender" value="Female">Female
+		    </label>
+		   <div id="error5" style="color:red;"></div>
+		  </div>
+		</div>
+    
+   </div>
+    
+    <div class="col-md-6">
+<div class="form-group">
+  <label for="text">Profile Image</label>
+      {{frm.picture}}
+      <img src="{{object.image}}" style=" border-radius: 50%; margin-left: 50%;height: 70px; width: 70px; margin-top: -56px;"> 
+     </div>
+
+    
+     
+    
+   
+     <div class="form-group" style="margin-top: -20px;">
+      <label for="text">Occupation</label>
+      <input type="text" class="form-control1 fsize" id="text" name="occupation" value="{{object.occupation}}">
+    </div>
+     
+     
+    <div class="form-group">
+      <label for="date">Website</label>
+      <input type="dob" class="form-control form-control1 fsize" disabled name="website"  value={{object.website}}>
+    </div>
+     <div class="form-group">
+      <label for="text">Contact</label>
+      <input type="text" class="form-control1 fsize" id="contact" name="contact" value={{object.contact}}>
+      <div id="error2" style="color:red;"></div>
+    </div>
+
+    
+      <div class="form-group" style="margin-top: 31px;">
+
+      <label for="text">Host Rating</label> 
+       {% if object_rating %}
+      {{object_rating}}
+      {% else %}
+      5
+      {% endif %}
+         <img id="img_logo" src="{% static 'image/favorite.png' %}">
+   
+    </div>
+     <b><input id="login_lost_btn" type="button" class="btn btn-link" style="padding-left: 0px;"><a href="{% url 'home:reset_password_host' %}">Change Password?</a></b>     
+    </div>
+    </div>
+    
+    <div class="row">
+   <div class="col-md-6">
+   <hr>
+   </div>
+   
+   <div class="col-md-6">
+   <hr>
+   </div>	
+   </div>
+<!--      
+  <div class="row socbtn">
+   <div class="col-md-6">
+   <button type="button" class="btn btn-theme fabtn">Register via Facebook&nbsp;&nbsp;<i class="fa fa-facebook-square"></i></button>
+   </div>
+    <div class="col-md-6">
+    <button type="button" class="btn btn-theme gogbtn"> Register via Google+&nbsp;&nbsp;<i class="fa fa-google-plus-square"></i></button>
+    </div>
+  </div> -->
+  
+        <div class="submitbtn">
+        <a href="{% url 'home:host_profile' %}"><button type="submit" id="host_update" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Update</button></a>&nbsp;
+         <a href="{% url 'home:host' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;">Cancel</button></a>        </div> 
+</form>     
+</div>
+
+<div class="modal fade" id="giftermodal" role="dialog">
+    <div class="modal-dialog modal-sm">
+         <div class="modal-content" style="margin-top: 231px;">
+        
+      <div class="modal-header" style="padding: 0px;">
+          <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+           <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Register Gifter</h4>
+        
+        </div>
+        <div class="modal-body">
+        <form id="gifter" class="gifter" action="" method="POST" >
+      {% csrf_token %}
+          <p>Do you want to register as a Gifter?</p>
+        </div>
+        <div class="modal-footer">
+        <center><div>
+          <a href="{% url 'home:gifter_toggle' %}" type="button" class="btn btn-primary challbtn share-btn" style="width: 27%;" >Yes</a>
+           <button type="button" class="btn btn-primary challbtn cancel-btn" data-dismiss="modal" style="width: 27%;">No</button>
+          </center></div></form>
+        </div>
+      
+      </div>
+    </div>
+{% endblock%}     

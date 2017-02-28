@@ -1,0 +1,177 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+<script>
+$(document).ready(function(){
+	var l=$('#obj').val();
+	console.log("list : ",l)
+	console.log('within list : ',l.length);
+	if (l.length>2)
+		{
+		$('#div1').hide();
+		$('#div2').show();
+		
+		}
+	else
+		{
+		console.log('within else');
+		$('#div1').show();
+		$('#div2').hide();
+		}
+	
+	
+	
+});
+</script>
+<nav class="navbar-inverse">
+  <div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);">
+     
+ 
+    <ul class="nav navbar-nav">
+     
+       <li><a href="{% url 'home:gifter_update' %}" role="button">My Profile</a></li>
+       <li class="navbtn"><a href="{% url 'home:my_goal' %}" role="button" style="background-color:#ccc;">My Goals</a></li>
+      
+ 
+       
+    </ul>
+    
+  </div>
+</nav>
+
+
+
+<div class="container goal">
+    <div hidden id="div1">
+    <form id="set-form" action="{% url 'home:set_goal' %}"  method="POST">
+      {% csrf_token %}
+   
+    <h3>Set Goals</h3>
+    <br><br>
+   
+     
+     <div class="form-group">
+      <label for="name">Set Gifting Hours for years(For Year)</label>
+      <input type="text" class="form-control1 fsize" id="name"  name="goal_hours" value="" placeholder="E.g: 500 ">
+    </div>
+    <div class="form-group">
+      <label for="text">Hours Already Spend</label>
+      <input type="text" class="form-control1 fsize" id="text" disabled value="" placeholder="0 out of 0">
+    </div>
+    
+    <div class="form-group">
+      <label for="text">Set Max Tasks(For Year)</label>
+      <input type="text" class="form-control1 fsize" id="text" name="goal_tasks" value="" placeholder="E.g: 500 ">
+    </div>
+    
+    <div class="form-group">
+      <label for="text">Tasks Already Taken</label>
+      <input type="text" class="form-control1 fsize" id="text" disabled value="" placeholder="0 out of 0">
+    </div>
+    
+              <div class="row">
+               <div class="col-md-6" style="margin-top: 13px;">
+        
+            
+                <label for="text">Percentage Completion</label>
+                 
+                    <div class="row demo-margin">
+                        
+				       <div class=" task col-md-3">
+                            <div class="text-center font-gray-dark pad5B text-transform-upr font-size-11">Tasks</div>
+                            <div class="chart-alt-2" data-percent="" data-bar-color="#2980b9"><span></span>%</div>
+                        </div>
+                        <div class=" hours col-md-3">
+                            <div class="text-center font-gray-dark pad5B text-transform-upr font-size-11">Hours</div>
+                            <div class="chart-alt-2" data-percent="" data-bar-color="#2980b9"><span>.</span>%</div>
+                        </div>
+                      
+                    </div>
+               
+            </div>
+               <div class="col-md-6" style="margin-top: 15px; margin-left: -100px;">
+              <label for="name">Gift Rewards Earned:</label> <b>{{rewards}}</b>
+              </div>
+             </div>
+     
+       <div class="submit">
+          <button type="submit" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Update</button>
+          
+  	   </div> 
+    </form>
+    </div>
+    
+    
+    <div hidden id="div2">
+     <form id="set-form" action="{% url 'home:my_goal' %}"  method="POST">
+      {% csrf_token %}
+    
+     <h3>Get Goals</h3>
+    <br><br>
+    <input type="hidden" value="{{object_list}}" id="obj">
+     {% for obj in object_list %}
+    <div class="form-group" >
+      <label for="name">Set Gifting Hours for years(For Year)</label>
+      <input type="text" class="form-control1 fsize" id="name"  name="goal_hours" value={{obj.goal_hours}} placeholder="E.g: 500">
+    </div>
+    <div class="form-group">
+      <label for="text">Hours Already Spend</label>
+      <input type="text" class="form-control1 fsize" id="text" disabled  value="{{obj.completed_hours}}/out of {{obj.goal_hours}}">
+    </div>
+   
+    <div class="form-group">
+      <label for="text">Set Max Tasks(For Year)</label>
+      <input type="text" class="form-control1 fsize" id="text" name="goal_tasks" value={{obj.goal_tasks}} placeholder="E.g: 500 ">
+    </div>
+    
+    <div class="form-group">
+      <label for="text">Tasks Already Taken</label>
+      <input type="text" class="form-control1 fsize" id="text" disabled value="{{obj.completed_tasks}}/out of {{obj.goal_tasks}}" >
+    </div>
+  {% endfor %}
+          
+           
+          
+              
+                 <div class="row">
+                  <div class="col-md-6" style="margin-top: 13px;">
+        
+            
+                <label for="text">Percentage Completion</label>
+                  {% for s in obj %}
+                    <div class="row demo-margin">
+                        
+				       <div class=" task col-md-3">
+                            <div class="text-center font-gray-dark pad5B text-transform-upr font-size-11">Tasks</div>
+                            <div class="chart-alt-2" data-percent="{{s.completed_tasks}}" data-bar-color="#2980b9"><span></span>%</div>
+                        </div>
+                        <div class=" hours col-md-3">
+                            <div class="text-center font-gray-dark pad5B text-transform-upr font-size-11">Hours</div>
+                            <div class="chart-alt-2" data-percent="{{s.completed_hours}}" data-bar-color="#2980b9"><span>.</span>%</div>
+                        </div>
+                      
+                    </div>
+                 {% endfor %}
+            </div>
+
+              <div class="col-md-6" style="margin-top: 15px; margin-left: -100px;">
+              <label for="name">Gift Rewards Earned:</label> <b>{{rewards}}</b>
+              </div>
+             </div>
+    
+   
+   
+      <div class="submit">
+          <button type="submit" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Update</button>
+          
+  	  </div> 
+ 
+  	</form>
+   </div>    
+   
+        
+</div><!-- end container -->
+
+   
+{% endblock%}     

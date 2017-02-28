@@ -1,0 +1,67 @@
+<script>
+ function challengeview1(url,challenge_id){
+  $.ajax({
+     url : url,
+     type : "GET",
+     data:{'challenge_id' : challenge_id}
+     }) 
+     .done(function(data) {
+    	 $.each(data,function(key ,value){
+     		console.log(value.location)
+     }
+       
+    	 console.log(data);
+    	
+       var aa=data[0].city
+       alert(aa);
+       var msg = data[0].photo
+       alert(msg);
+       if(msg.startsWith("./"))
+          { 
+    	 
+         var newVal=msg.split(".");
+         var Val=("/static/img/".concat(newVal[1])).concat(".".concat(newVal[2]));
+         $('#id_image').attr('src',Val);
+    }
+        else{
+         var word=msg.split(",");
+         $('#id_image').attr('src',word[1]);
+    
+         }
+     });
+    	 
+       </script>
+ {% for CategoryLocationRelForm in var %}
+ 
+ 
+
+
+<!--  <input type="text" value="{{ CategoryLocationRelForm.locationtype.city }}"> -->
+ 
+ <div class="row">
+
+										<div class="col-sm-3 form-group" id="column_space"
+											style="width: 79%; margin-left: 3%;">
+											{{ CategoryLocationRelForm.locationtype.city }}
+											
+											
+										</div>
+  
+ 
+ {% endfor %}
+ </br>
+ {% for form in var1 %}
+ 
+ 
+ 
+
+
+{% if form.photo%}
+      <img  id="user_img"  alt="" class="img-rounded"  src="/static/img/{{form.photo}}"  style="width:100px;height:100px;cursor:pointer;">
+      {%else%}
+      {%endif%}
+      
+     
+    
+ 
+ {% endfor %}

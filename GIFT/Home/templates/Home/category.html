@@ -1,0 +1,160 @@
+{% extends "base4.html" %}
+{% load static from staticfiles %}
+
+{% block head %}
+ <title>Gift Web</title>
+ 
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+ 
+ <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" media="all">
+   <script src="{% static 'js/category.js' %}"></script>
+ <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+ 
+ <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="all">
+ 
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+  <link href="{% static 'css/jquery-ui.css' %}" type="text/css" rel="stylesheet" media="all">
+  
+  <script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
+  
+  <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+  <script src="{% static 'js/category.js' %}"></script>
+
+  <style>
+::-webkit-input-placeholder { text-align:center; }
+</style>
+
+<script>
+allValues=[]
+function categoryredirect(){
+ //alert("click cancel");
+ 
+ var checkboxes=$("#cat").contents().find(':checkbox');
+     
+    for (var i = 0; i < checkboxes.length; i++)
+       {
+           if(checkboxes[i].checked==true)
+            {
+             console.log('k',checkboxes[i].value);
+             allValues.push(checkboxes[i].value)
+             var cat=allValues.toString();
+            }
+       }
+ 
+        var len= allValues.length
+        
+        if(len>0){
+         
+         
+          window.location.href="http://192.168.1.129:8063/home/challenge/"
+        }
+        else{
+          window.location.href="http://192.168.1.129:8063/home/category_unselect/"
+         
+        }
+ 
+}
+ 
+</script>
+
+  <script>
+$(document).ready(function(){
+	var list={{obj}};
+	
+	console.log("start category");
+	for(i=0;i<list.length;i++)
+		{
+		  //console.log(list[i]);
+		 cat =(list[i]);
+		 console.log(cat);
+		 
+		 $(":checkbox").filter(function() {
+		        return this.value == cat;
+		    }).prop("checked", "true");
+		} 
+	console.log("after loop");
+	 $("#cat").show();
+	 $("#searchimg").click(function(){
+			$("#myInput").focus();
+		})
+				
+});
+</script>
+
+  <style>
+  
+     .div1 {
+    width: 110px;
+    height: 100px;
+    border: 1px solid #458b9d;
+    box-sizing: border-box;
+}
+ 
+  </style>
+  <script>
+function myFunction() {
+    var input, filter, ul, li, a, i,b;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+	ul = document.getElementById("cat");
+    li = ul.getElementsByClassName("list-group-item");
+	
+	
+    for (i = 0; i < li.length; i++) {
+		a = li[i].innerHTML.toUpperCase();
+		//alert(a.indexOf(filter));
+		if (a.indexOf(filter) > -1) {
+		    li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+</script>
+  {% endblock %}
+{% block content %}
+<div id="demo1"style="cursor: pointer;background-color:#f5f5f5;color:green;opacity:0.8; height:52px;display:none;"></div>
+ <div class="container">
+  <h2>Category</h2>
+  
+<div id="dataloc" style="border:solid;   border-color: #EFF5FB;height:3opx;width:1140px;border-radius:10px;" >
+
+<img src="{% static 'image/category.jpg' %}"height=40px, width= 40px, style="padding:5px;">
+ <a href="#demo" style="font-size:20px;">Select  your category</a>
+
+ <img id="searchimg" src="{% static 'image/search.png' %}"height=30px, width= 30px, style="padding:5px;float:right;margin-top:3px;margin-right:3px;">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for category" title="Type in a name" style="float:right;border-color: #EFF5FB;height:30px;width:180px;margin-top:5px;margin-right:10px;"> 
+
+ </div>
+   <form id="category-form" method="POST" action="{% url 'home:challenge' %}" >
+   {% csrf_token %}
+    <div id="cat" class="collapse" style="margin-top:10px;">
+			    
+			 
+			 {% for k in object_list%}
+			
+			 
+		<li class="list-group-item"><label>{{k.category_name}}</label><input type="checkbox" id="check" class="demo faChkRnd1 pull-right" name="category" value="{{k.category_id}}"></li>
+				
+			{% endfor %}
+		</br>
+		<input type="button" id="categoryclick"  class="btn btn-default" value="Submit" style="float:right;background-color: #0072BC;color: white;width: 97px;margin-top:-8px;">
+		<input type="button"  onclick="categoryredirect()"  class="btn btn-default" Value="Cancel" style="float:right;background-color: #0072BC;color: white;width: 97px;margin-top:-8px;margin-right:4px;">
+	        
+					
+	 
+	 </form>
+	 </div>
+			
+
+</div>
+
+
+{% endblock %}

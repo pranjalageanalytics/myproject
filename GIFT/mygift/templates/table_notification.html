@@ -1,0 +1,380 @@
+ {% extends "admin.html" %} {% load table_tags %} {% load staticfiles %}
+  {% load notifications_tags %}
+  {% notifications_unread as unread_count %}
+   <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
+<script type="text/javascript" src="{% static 'js/notification.js' %}" ></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{%block styleBlock%}
+<style type="text/css">
+
+.modal-footer {
+    padding: 15px;
+    text-align: right;
+    
+}
+.modal-footer {
+    border-top-color: rgba(114, 81, 81, 0);
+}
+.modal-footer {
+    padding: 48px;
+    text-align: right;
+    margin-left:106px;
+}
+.modal {
+	overflow: auto
+}
+
+
+.form-control[disabled], fieldset[disabled] .form-control {
+    cursor: auto;
+}
+
+.header1
+{
+    margin-left: 450px;
+    font-size: 140%;
+   
+    border-color: blue
+}
+
+.modal.modal-wide .modal-dialog {
+	width: 80%;
+}
+
+.item {
+	margin-left: 2%;
+	width: 75%;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.itemassets {
+	margin-left: 2%;
+	width: 75%;
+}
+
+.modal-wide .modal-body {
+	overflow-y: auto;
+}
+
+#textarea {
+	margin-left: 2%;
+}
+
+.chkbox-width {
+	width: 15%
+}
+
+#extraasst {
+	margin-left: 15%;
+	width: 135%;
+}
+
+#extraasst_quantity {
+	margin-left: 70%;
+	width: 20%;
+}
+
+.asets_quantity_left {
+	width: 7%;
+	margin-left: 38%;
+	position: absolute;
+	margin-top: -5%
+}
+
+.asets_desc_left {
+	width: 50%;
+	margin-left: 48%;
+	position: absolute;
+	margin-top: -5%
+}
+
+label {
+	margin-top: 20px;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.modal-wide .modal-body {
+	overflow: hidden;
+}
+</style>
+
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+ td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+
+</style>
+{%endblock%} {%block ScriptBlock%}
+<script>
+function refreshPage(){
+    window.location.reload();
+} 		
+$("#t1").on("click", function() {
+	
+			//alert("hii.........");
+			notification_id =$(this).closest('tr').find('td:eq(1)').html();
+			
+			 console.log(notification_id)
+		     
+		     //$("#notification_id").val(notification_id);
+			// $("#challenge").val(challenge_id);
+		    	
+		     
+		       url='/mygift/viewnotification/';       
+		       viewnotification(url,challenge_id);  
+	    	 
+		    	
+		    	
+		    });
+		    
+function myread() {
+	var notification_id=$('#notification_id').val();
+    //alert("@@@@@@@@@@"+notification_id);
+    url='/mygift/mark_as_read/' ,
+    markread(url,notification_id);
+    console.log("notification_id"+notification_id);
+	//document.getElementById("demo").innerHTML = "Hello World";
+}	    
+
+		
+function markread(url,notification_id){
+	$.ajax({
+		url:url,
+		type:"GET",
+		data:{'notification_id' : notification_id}
+		
+	})
+	.done(function(data){
+	//alert("$$$$$$$$$$$$$$$$$$");	
+	})
+	
+}
+	
+	
+				
+	
+	
+  					
+	
+	function viewnotification(url,notification_id){
+  $.ajax({
+     url : url,
+     type : "GET",
+     data:{'notification_id' : notification_id}
+     }) 
+     .done(function(data) {
+       
+    	 //console.log(data);
+    	$.each(data,function(key ,value){
+    		
+    		
+    		console.log(data);
+    		
+    		   //$('#actor').val(data[0].actor_object_id.);
+    		   $('#notification_id').val(data[0].id);
+    		   $('#verb').val(data[0].verb);
+    		myread();  
+    		
+    		
+    		
+    		
+    		
+     		
+    	});
+    	
+    
+    	
+              
+       });
+ }				
+		
+	
+	</script>
+{%endblock%} {% block content %}
+
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List of Notification</h3>
+
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body" id="">
+				
+				<script>
+				$(document).on('click', '#table1 tr', function (e) {
+				    e.stopPropagation();
+				    var $this = $(this);
+				    var trid = $(this).closest('tr').find('td:eq(1)').html();
+				    console.log("TR ID " + trid);
+				    myFunction(trid);
+				    myread(trid);
+				    
+				});
+function myFunction(notification_id) {
+	
+	
+	//alert("hii.........");
+	//notification_id =$(this).closest('tr').find('td:eq(0)').html();
+	url='/mygift/viewnotification/'+notification_id; 
+	
+     viewnotification(url,notification_id); 
+	 
+	 console.log("qwerty",+notification_id)
+   
+}
+
+
+
+</script>
+<style>
+table {
+    counter-reset: tableCount;     
+}
+.counterCell:before {              
+    content: counter(tableCount); 
+    counter-increment: tableCount; 
+}
+</style>
+
+<table id="table1">
+<tr id="0">
+<th>Id</th>
+<th>Actor </th>
+
+<th>Time</th>
+<th>View</th>
+</tr>
+
+{% for form in users %}
+{% if form.unread %}
+
+<tr id="0"  style="background-color:#b8b894;">
+
+	<td  class="counterCell"></td>
+	<td style="display:none;">{{form.id}}</td>
+        <td>{{form.actor}}</td>
+    
+    <td>{{form.timesince }}</td>
+    <td id="t1" data-toggle="modal" data-target="#myModal"  onclick=myFunction()><i class="fa fa-file-text" ></i></a></td>
+  </tr>
+  {% else %}
+<tr id="0"  style="">
+
+	<td  class="counterCell"></td>
+	<td style="display:none;">{{form.id}}</td>
+       <td>{{form.actor}}</td>
+    
+    <td>{{form.timesince }}</td>
+    <td id="t1" data-toggle="modal" data-target="#myModal"  onclick=myFunction()><i class="fa fa-file-text" ></i></a></td>
+  </tr>  
+  
+{% endif %} 
+{% endfor %}
+</table>
+
+{% if users.has_other_pages %}
+  <ul class="pagination">
+    {% if users.has_previous %}
+      <li><a href="?page={{ users.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in users.paginator.page_range %}
+      {% if users.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if users.has_next %}
+      <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+
+
+
+
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notification Details</h4>
+        </div>
+        <div class="modal-body">
+        <input type="hidden" name="notification_id" id="notification_id" value=""/>
+        
+         
+          
+      
+         <input type="text" id="verb"  style="text-shadow: 2px;width: 100%;background-color: transparent;border: 0px solid;font-weight: bold;">
+         <!-- color:#adad85; -->
+         
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="close" onclick="myread();refreshPage();" >Close</a></button>
+           <!-- <button type="button" class="btn btn-default" onclick="myread()">Mark as Read</button> -->
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+
+				
+				
+				</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+</section>
+
+<!-- delete modal -->
+
+<!-- end delete modal -->
+<!-- Modal -->
+
+								<
+
+
+
+
+
+
+
+{%endblock%}
+<!-- /.content -->

@@ -1,0 +1,308 @@
+{% extends "base3.html" %}
+{% load static from staticfiles %}
+
+
+
+
+{% block content %}
+
+ 
+<script src="{% static 'js/create_challenge_location_category.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/wickedpicker.css' %}">  
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>  
+<script type="text/javascript" src="{% static 'js/wickedpicker.js' %}"></script>
+ 
+
+<script>
+$(document).ready(function(){
+ $('input.timepicker').wickedpicker();
+
+ $('input.timepicker1').wickedpicker();
+
+});
+
+
+
+
+</script>
+
+
+
+<style>
+#ui-datepicker-div { 
+        font-size: 12px;
+        
+} 
+#datepicker{float:left; height:18px;}
+h1{font-size: 15px;}
+
+.ui-datepicker-trigger
+{
+        margin-left: 335px;
+        margin-top: -60px; 
+}
+
+</style>
+<style>
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+</style>
+<script>
+$(document).on('click', '.browse', function(){
+	  var file = $(this).parent().parent().parent().find('.file');
+	  file.trigger('click');
+	});
+	$(document).on('change', '.file', function(){
+	  $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+	});
+</script>
+
+
+ <script>
+         $(function() {
+            $( "#start_date" ).datepicker({
+            	
+            	 format: "yyyy-mm-dd",
+            	 
+            	});
+            var date1 = document.getElementById("start_date").value;
+         });
+ </script>
+ <script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+            	 $( "#end_date" ).datepicker({
+            		 format: "yyyy-mm-dd",
+            		 });
+            	 var date2 = document.getElementById("end_date").value;
+                   
+                });  
+            
+            
+ </script> 
+ 
+ <script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+                $('#exp_date').datepicker({
+                	 format: "yyyy-mm-dd",
+                     
+                }); 
+                var date3 = document.getElementById("exp_date").value;
+            
+            });
+ </script>
+
+<nav class="navbar-inverse">
+  <div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);">
+     
+ 
+    <ul class="nav navbar-nav mychellge">
+     
+       
+       <li><a href="{% url 'home:host' %}" class="navbtn" role="button" style="background-color:#ccc;">My Challenges</a></li>
+       
+      
+      
+    </ul>
+    
+    <div class="col-sm-3 col-md-3 pull-right" style="margin-left: -11px;">
+        <form class="navbar-form" role="search">
+        
+        
+        <div class="input-group ">
+            <input type="text" class="form-control" placeholder="Search" name="q">
+            <div class="input-group-btn">
+                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        </form>
+    </div>
+    
+  
+  </div>
+</nav>
+
+<div class="container">
+ <form action="#"  id="form" method="POST">
+  {% csrf_token %}
+    <h3>Post your own challenge</h3>
+    
+    
+    <div class="form-activate" style="padding-left: 107px;margin-right: 15px;margin-left: 15px;margin-top: 30px;">
+    <div class="row">
+    <div class="col-md-6" style="margin-top: 14px;">
+    <div class="form-group">
+      <label for="name">Title<span style="color:red;">*</span></label>
+     <input type="text" class="form-control1 fsize" name="title" id="title" placeholder="Title" >
+     <div id="errortitle" style="color:red;"></div>
+    </div>
+    
+
+<!-- <div class="form-group">
+   <label for="name">Add your Own image</label>
+   <input type="file" class="form-control1 fsize" name="image" id="image" >
+    <div id="errorimage" style="color:red;"></div>
+   <img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
+</div> -->   
+
+<div class="form-group">
+   <label for="name">Challenge Start Date<span style="color:red;">*</span></label>
+   <input type="text" class="form-control1 fsize" name="start_date" id="start_date" placeholder="Challenge Start date">
+   <div id="errorstart" style="color:red;"></div>
+   <img src="{% static 'image/gift icon/calendar.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
+</div> 
+    
+ <div class="form-group">
+    <label for="name">Challenge End Date<span style="color:red;">*</span></label>
+    <input type="text" class="form-control1 fsize" name="end_date" id="end_date" placeholder="Challenge End date">
+    <div id="errorend" style="color:red;"></div>
+    <img src="{% static 'image/gift icon/calendar.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
+</div> 
+    
+    
+ <div class="form-group">
+       <label for="name">Expiration Date to join<span style="color:red;">*</span></label>
+      <input type="text" class="form-control1 fsize" name="reg_expire_date" id="exp_date" placeholder="Expiration Date to join">
+       <div id="errorexp" style="color:red;"></div>
+      <img src="{% static 'image/gift icon/calendar.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
+</div> 
+     
+   
+<div class="form-group">
+   <label for="name">Challenge Start Time<span style="color:red;">*</span></label>
+   <input type="text" class="form-control1 fsize timepicker" name="start_time" id="timepicker" placeholder="Challenge Start time">
+   <div id="errortime" style="color:red;"></div>
+   <img src="{% static 'image/gift icon/clock.png' %}" style="margin-left: 294px; margin-top: -58px;color:#0072BC">
+</div>
+
+
+
+
+<div class="form-group" >
+   <label for="name">Challenge End Time<span style="color:red;">*</span></label>
+   <input type="text" class="form-control1 fsize timepicker1" name="end_time" id="timepicker1" placeholder="Challenge End time"> 
+   <div id="errortime1" style="color:red;"></div>
+   <img src="{% static 'image/gift icon/clock.png' %}"  class="clock" style="margin-left:294px; margin-top: -58px;color:#0072BC">
+</div>
+
+<div class="form-group">
+      <label for="name">No of Volunteers<span style="color:red;">*</span></label>
+     <input type="text" class="form-control1 fsize" name="requested_volunteers" id="requested_volunteers" placeholder="No of Volunteers">
+     <div id="errorvolunteer" style="color:red;"></div>
+ </div> 
+
+</div>
+
+
+
+<div class="col-md-6" style="margin-top: 41px;">
+<div class="form-group dropdown" name="category" id="category">
+    
+    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style="width: 60%;height: 34px;background-color:#ccc;">
+    
+    <div class="select1" style="margin-right: 335px;">------ Category ------</div>
+    <div class="img"> <span><img src="{% static 'image/gift icon/caret-down.png' %}" height="20px" width = "20px" style=" margin-left: 253px;margin-top:-15%;"></span></div></button>
+    <ul class="dropdown-menu scrollable-menu " role="menu" aria-labelledby="menu1" style="min-width: 310px;">
+    
+    {% for c in obj%}
+  
+      <li class="list-group-item "><label>{{c.category_name}}</label><input type="checkbox" id="check" class="ckeckm demo faChkRnd1 pull-right" name="category" value="{{c.category_id}}"></li>
+      
+    {% endfor %} 
+    </ul>
+     <div id="errorcategory" style="color:red;"></div>
+  </div>
+  <br>
+  <div class="form-group dropdown" name="location" id="location">
+
+    <button class="btn btn-default dropdown-toggle"  type="button" id="menu2" data-toggle="dropdown" style="width: 60%;height: 34px;background-color:#ccc;">
+    <div class="select2" style="margin-right: 335px;">------ Location ------- </div>
+    <div class="img"><span><img src="{% static 'image/gift icon/caret-down.png' %}" height="20px" width = "20px" style=" margin-left: 253px;margin-top:-15%;"></span></div></button>
+    <ul class="dropdown-menu scrollable-menu " role="menu" id="menu" aria-labelledby="menu2" style="min-width: 310px;">
+    {% for k in object_list%}
+      <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">hjsadhjhsda</a></li> -->
+      <li class="list-group-item "><label>{{k.city}}</label><input type="checkbox" id="check1" class="local demo faChkRnd1 pull-right" name="location" value="{{k.id}}"></li>
+      	{% endfor %} 
+    </ul>
+    <div id="errorlocation" style="color:red;"></div>
+  </div> 
+ <br> 
+  
+<div class="form-group">
+      <label for="name">Venue<span style="color:red;">*</span></label>
+     <input type="text" class="form-control1 fsize" name="venue" id="venue" placeholder="Venue">
+     <div id="errorvenue" style="color:red;"></div>
+ </div>
+ <br>
+<div class="form-group">
+       <label for="name">Directions</label>
+      <input type="text" class="form-control1 fsize" name="direction" id="direction" placeholder="Directions">
+      <div id="errordirection" style="color:red;"></div>
+      <img src="{% static 'image/gift icon/directions.png' %}"  class="direction"style="margin-left:294px; margin-top: -58px;color:#0072BC">
+  </div> 
+  
+  
+ 
+ <div class="form-group">
+       <label for="name">Contact<span style="color:red;">*</span></label>
+      <input type="text" class="form-control1 fsize" name="contact_no" id="number" placeholder="contact">
+       <div id="error1" style="color:red;"></div>
+      <img src="{% static 'image/gift icon/mobile.png' %}"  class="contact"style="margin-left: 294px; margin-top: -58px;color:#0072BC">
+    </div>
+ 
+ 
+      
+<div class="form-group">
+      <label for="name">Description</label>
+     <input type="text" class="form-control1 fsize" name="description" id="description" placeholder="Discription">
+ </div>
+<br>
+<!--<div class="form-group">
+      <label for="name">No of Volunteers<span style="color:red;">*</span></label>
+     <input type="text" class="form-control1 fsize" name="requested_volunteers" id="requested_volunteers" placeholder="No of Volunteers">
+     <div id="errorvolunteer" style="color:red;"></div>
+ </div>-->
+ </div>
+ </div>  
+
+   
+ 
+ 
+  </form>
+ <form action="{% url 'home:upload_pic'%}"  id="picture_form" method="POST" enctype="multipart/form-data">
+     {% csrf_token %}
+     <div class="col-md-6" style="margin-left: -15px;">
+
+     <div class="form-group">
+     <label for="name">Add Image</label>
+        
+     {{frm.picture}}
+       
+     <img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -47px;color:#0072BC">
+
+     </div>
+     </div>
+     </form> 
+
+ <div class="submit">
+          <button type="button" class="btn1 btn-default submit" id="sub" style="background-color: #0072BC;color: white;width: 97px;height: 33px;margin-bottom: 18px;">Submit</button>
+          
+  </div>
+      </div> 
+ </div>  
+       
+</div>
+{% endblock %} 

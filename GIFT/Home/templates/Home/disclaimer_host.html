@@ -1,0 +1,32 @@
+{% extends "base3.html" %}
+{% load static from staticfiles %}
+
+
+
+{% block content %}
+<nav class="navbar-inverse">
+<div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);padding-bottom: 12px;padding-top: 10px;">
+ <div class="nav navbar-nav disclaimer pull-right"> 
+     <img src="{% static 'image/rss.png' %}" class="img_rss" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;">RSS</span>
+      <img src="{% static 'image/Email.png' %}" class="img_Email" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;"> EMAIL</span>
+      <img src="{% static 'image/twitter.png' %}" class="img_twitter" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"> <span style="padding-left: 5px;margin-top: 115px;font-size: 12px;">TWITTER</span>
+      <img src="{% static 'image/square-facebook.png' %}" class="img_facebook" style="width: 22px;height: 19px;padding-top: 2px;margin-left: 8px"><span style="padding-left: 5px;margin-top: 115px;font-size: 12px;"> FACEBOOK </span>   
+    </div>
+    
+  </nav>
+  {% if user %}
+   <div class="container">  
+    <h3>Disclaimers:</h3><br>
+    <p>GIFT Team provides the Web site and/or Mobile App as a service to the public and web site owners.</p>
+    
+    <p>GIFT Team is not responsible for, and expressly disclaims all liability for, damages of any kind arising out of use, reference to, or reliance on any information contained within the site. While the information provided in this web site and/or Mobile application is correct, complete, and up-to-date.</p>
+    <p>Although the GIFT Team Web site and/or Mobile Application may include links providing direct access to other Internet resources, including Web sites, GIFT Team is not responsible for the accuracy or content of information contained in these sites.</br>
+    </p>
+    <p>Links from GIFT Team to third-party sites do not constitute on endorsement by GIFT Team of the parties or their products and services. The appearances on the Web site and/or Mobile Application of advertisements and product or service information does not constitute an endorsement by GIFT Team, and GIFT Team has not investigated the claims made by any advertiser. Product information is based solely on material received from suppliers.</br></p>
+   </div>
+   {% else %}
+   <p>Sorry,Please Log in!!!</p>
+   {% endif %}
+   </div>
+   
+{% endblock %} 

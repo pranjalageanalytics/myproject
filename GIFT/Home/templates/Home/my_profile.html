@@ -1,0 +1,208 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+
+ 
+{% block content %}
+
+<script src="{% static 'js/gifter_update.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+ //alert("hiii");
+
+  
+  $(function() {
+     var $radios = $('input:radio[name=gender]');
+     if($radios.is(':checked') === false) {
+         $radios.filter('[value={{gender}}]').prop('checked', true);
+     }
+    
+ }); 
+ 
+
+ 
+    
+});
+</script>
+<script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+                $('#datepicker').datepicker({
+                    format: "yyyy-mm-dd"
+                });  
+            
+            });
+        </script>
+
+
+<nav class="navbar-inverse">
+  <div class="container-fluid" style="box-shadow: 0 1px 5px rgb(14, 15, 17);">
+     
+ 
+    <ul class="nav navbar-nav">
+     
+       <li><a href="#" role="button" style="background-color:#ccc;">My Profiles</a></li>
+       <li><a href="{% url 'home:my_goal' %}"role="button" class="navbtn" >My Goals</a></li>
+      
+    </ul>
+    
+  </div>
+</nav>
+
+<div class="container">
+{% if update %}
+ <ul class="noty-wrapper i-am-new" id="noty_top">
+    <li class="bg-green" style="cursor: pointer;background-color:#f5f5f5;color:green;opacity:0.8; height:52px;">
+       <div class="noty_bar" id="noty_453371394759536000">
+ <div class="noty_message"><span class="noty_text">
+            <i class="fa fa-times" aria-hidden="true" id="cog"></i>&nbsp;&nbsp; {{update}}</span>
+          </div>
+          </div></li></ul>
+           {% endif %}
+ <form action="" method="POST" enctype='multipart/form-data'>
+      {% csrf_token %}
+  <br><br>
+    <div class="row field">
+     <div class="form-group">
+      <!-- <label for="text" style="color: grey;">Role</label> -->
+      <br>
+    
+
+
+
+<div style="padding-bottom: 15px;">
+  
+      {% if host_success == 'Success' %}
+       <button type="button" class="btn1 btn-default"   data-toggle="modal" data-target="#hostmodal"  style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Switch Host</button>
+   
+      {% else %}
+       
+     <a href="{% url 'home:host_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Host</button> </a>
+   {% endif %}
+    </div>		 
+		</div>  
+		<hr>
+    <div class="col-md-6">
+    
+   <div class="form-group">
+      <label for="name">Display name</label>
+      <input type="text" class="form-control1 fsize" id="name" name="display_name" value="{{object.display_name}}">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+     <input type="email" class="form-control fsize field left" id="email" disabled name="email"  value={{email}} >
+    </div>
+    
+    <div class="form-group">
+      <label for="text">Home Town</label>
+      <input type="text" class="form-control1 fsize" id="text"  name="hometown" value="{{object.hometown}}" >
+    </div>
+    
+    <div class="form-group">
+      <label for="date">DOB</label>
+      <input type="text" class="form-control1 fsize" id="datepicker" name="dob" value={{object.date_of_birth}}>
+      <div id="dob_error" style="color:red;"></div>
+    </div>
+    <div class="form-group">
+      <label for="text" style="color: grey;">Gender</label>
+      <br>
+		  <div style="padding-bottom: 15px;">
+		    <label class="radio-inline">
+		      <input type="radio" name="gender" value="Male">Male
+		    </label>
+		    <label class="radio-inline">
+		      <input type="radio" name="gender" value="Female">Female
+		    </label>
+		   
+		  </div>
+		</div>
+     
+    
+   </div>
+    
+    <div class="col-md-6">
+  
+    <div class="form-group">
+    <label for="text">Profile Image</label>
+        {{frm.picture}}
+   
+
+      
+       <img src="{{object.image}}" style="  border-radius: 50%; margin-left: 50%;height: 70px; width: 70px; margin-top: -56px;">  
+   </div>
+
+
+ 
+     <div class="form-group" style="margin-top: -20px;">
+      <label for="text">Occupation</label>
+      <input type="text" class="form-control1 fsize" id="text" name="occupation" value="{{object.occupation}}">
+    </div>     
+   
+     <div class="form-group">
+      <label for="text">Contact</label>
+      <input type="text" class="form-control1 fsize" id="contact" name="contact" value={{object.contact}}>
+      <div id="error2" style="color:red;"></div>
+    </div>
+     
+    <div class="form-group" style="margin-top: 31px;">
+      <label for="text">Gifter Rating</label>:
+      {% if object_rating %}
+      {{object_rating}}
+      {% else %}
+      5
+      {% endif %}
+      <img id="img_logo" src="{% static 'image/favorite.png' %}"><!-- <input type="text" class="form-control fsize " id="text" disabled name="gifter_rating" value={{object_rating}}> -->
+     </div>
+      <b><input id="login_lost_btn" type="button" class="btn btn-link" style="padding-left:0px;"><a href="{% url 'home:reset_password_save' %}">Change Password?</b></a>     
+    </div>
+     
+    </div>
+    </div>
+   
+    <div class="row">
+   <div class="col-md-6">
+   <hr>
+   </div>
+   
+   <div class="col-md-6">
+   <hr>
+   </div>	
+   </div>
+     
+  
+  
+        <div class="submitbtn">
+          <a href="{% url 'home:gifter_update' %}"><button type="submit" id="gifter_update" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Update</button></a>&nbsp;
+         <a href="{% url 'home:gifter' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;">Cancel</button></a>
+        </div> 
+</form>     
+</div>
+
+<div class="modal fade" id="hostmodal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="margin-top: 231px;">
+        
+      <div class="modal-header" style="padding: 0px;">
+          <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+           <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Register Host</h4>
+        
+        </div>
+        <div class="modal-body">
+        <form id="host" class="host" action="" method="POST" >
+      {% csrf_token %}
+          <p>Do you want to register as a Host?</p>
+        </div>
+        <div class="modal-footer">
+        <center><div>
+          <a href="{% url 'home:host_toggle_save' %}" type="button" class="btn btn-primary challbtn share-btn" style="width: 27%;" >Yes</button><a>
+           <button type="button" class="btn btn-primary challbtn cancel-btn" data-dismiss="modal" style="width: 27%;">No</button>
+          </center></div></form>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+{% endblock%}     

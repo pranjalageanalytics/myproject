@@ -1,0 +1,300 @@
+{% load static from staticfiles %}
+{% block head %}
+<!DOCTYPE html> 
+ <title>Gift Web</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+  <script src="{% static 'js/location.js' %}"></script>
+  <script src="{% static 'js/category.js' %}"></script>
+ <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" media="all">
+ 
+  <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+ 
+ <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="all">
+ 
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+
+  <link href="{% static 'css/jquery-ui.css' %}" type="text/css" rel="stylesheet" media="all">
+  
+  <script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
+  
+  <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+   <script type="text/javascript" src="{% static "js/update_password.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/datepicker.js"" %}"></script>
+  	<link rel="stylesheet" href="{% static 'css/datepicker.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/piegage.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/progressbar.css' %}">
+     
+  <script src="{% static 'js/piegage.js' %}"></script>
+  <script src="{% static 'js/piegage-demo.js' %}"></script>
+  <script src="{% static 'js/progressbar.js' %}"></script>
+
+     
+   <script>
+   $( function() {
+		  $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+	    
+	  } ); 
+ 
+  </script>
+ 
+ 
+<!-- jQuery library -->
+
+
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }*/
+     *,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing:    border-box;
+  box-sizing:         border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 4rem;
+  min-height: 100%;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+
+footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
+     .div1 {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #458b9d;
+    box-sizing: border-box;
+}
+    
+    </style>
+
+
+{% endblock %} 
+
+<nav class="navbar navbar-inverse">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" style="background-color: #0072BC;">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+     	<img id="img_logo" src="{% static 'image/gift2.png' %}" class="header_logo">
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+     
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="#">Hi  {{email}}</a></li>
+         <li><a href="#" role="button" data-toggle="modal" data-target="#logouthost">Logout</a></li>
+      </ul>
+    </div>
+  
+</nav>
+
+<nav class="navbar navbar-inverse">
+  
+    <div class="navbar-header">
+    
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2" style="background-color: #0072BC;">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+     
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar2" style="background-color: #0072BC;">
+      <ul class="nav navbar-nav">
+       
+         <li><a href="" style="color: #fff;">Home</a></li>
+	<li><a href="{% url 'home:location' %}" style="color: #fff;">Filter</a></li>
+        <!--<li><a href="#" role="button" data-toggle="modal" data-target="#location_gifter" id="loc" style="color: #fff;">Location</a></li>
+        <li><a href="#" role="button" data-toggle="modal" data-target="#myModal" style="color: #fff;">Category</a></li>-->
+        <li><a href="" style="color: #fff;">Profile</a></li>
+         <li><a href="" style="color: #fff;">Ranking</a></li>
+        <li><a href="" style="color: #fff;">Past Challenge</a></li>
+        <li><a href="" style="color: #fff;">Inbox</a></li>
+        <li><a href="" style="color: #fff;">Disclaimer</a></li>
+        <li><a href="" style="color: #fff;">FAQs</a></li>
+        
+      </ul>
+      
+     
+    </div>
+ 
+</nav>
+
+
+
+  <!-- Modal Category-->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content categmodal">
+        
+         {% csrf_token %}
+        <div class="modal-header" style="background-color: #0072BC;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4 class="modal-title" style="color: #fff;">Personalize</h4></center>
+		  <center><h5 class="modal-title" style="color: #fff;">Choose your favourite topic for a more personalized experience</h5></center>
+        </div>
+
+        <form id="category-form">
+        <div class="modal-body">
+        <iframe id="iframe_category"class="iframe_cat" src="http://192.168.1.129:8063/home/category/"></iframe> 
+      
+			
+        	<div class="modal-footer" style="height:40px;">
+          <center>  <input type="submit" class="btn btn-default" value="Update" style="background-color: #0072BC;color: white;width: 97px;"></center>
+        </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Locatio-Modal -->
+    <div id="location_gifter" class="modal fade" role="dialog">
+    <div class="modal-dialog"style="width:31%;">
+    
+      <!-- Modal content-->
+      
+      <div class="modal-content location">
+       
+        <div class="modal-header" style="padding: 0px;">
+          <button type="button" class="close" data-dismiss="modal" style="padding-right: 15px; margin-top: 3px;">&times;</button>
+          <div class="modal-title" style="background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;"><u style="margin-left: 16px;">Enter your location</u></div>
+        </div>
+        
+        {% csrf_token %}
+       
+        <div class="modal-body">
+        
+         <div class="row" style="background-color:white;color:#0072BC;height:20px;">
+            <div class="col-md-10">
+              <h5 style="margin-top:-8px;margin-left: 2px; font-size: 16px;">Use my current location
+              </h5>
+              </div>
+              <div class="col-md-2">
+              <img src="{% static 'image/gift icon/gps.png' %}" class="gps">
+              </div>
+              </div>
+              <div class="row" style="background-color:#0072BC;color:white;line-height: 2.428571;height: 35px;">
+              <h5 style="margin-left: 18px;">Popular Locations</h5>
+              </div>
+              <form id="location-form">
+               <ul class="list-group">
+        
+          	<iframe id="iframe" class="iframe_loc" src="http://192.168.1.129:8063/home/location/"></iframe>
+              
+             </ul>
+         <div class="modal-footer" style="height:50px;">
+          <center>
+      
+         <input type="button" class="btn btn-default" id="location_update" value="Update" style="background-color: #0072BC;color: white;width: 97px;">
+       
+          </center> 
+            </form>
+            <!--   <div>
+                       <center><b><a href="#myModal" data-toggle="modal" data-dismiss="modal"><button class="w3-btn w3-yellow w3-border" style="padding: 2px 70px 2px 70px; color: #0072BC;">Register As a Host</button></a></b>
+                         </center>
+                            </div>  -->
+				    	   
+        </div>	
+        </div>
+         
+         
+     
+      </div>
+      
+    </div>
+  </div>
+
+
+
+<div class="modal fade" id="logouthost" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="margin-top: 231px;">
+
+        <div class="modal-header" style="padding: 0px;">
+              <button type="button" class="close" data-dismiss="modal" style="color:#f5f5f5;margin-right: 7px;">&times;</button>
+           <h4 class="modal-title" style="padding-left:20px;background-color:#0072BC;color:white;line-height: 2.428571; font-size: 14px;">Logout</h4>
+        
+        </div>
+        <div class="modal-body">
+        <form id="logout" action="{% url 'home:logout' %}"  method="POST">
+      {% csrf_token %}
+          <p>Are you sure, you want to logout</p>
+         
+        </div>
+       <div class="modal-footer">
+      <center> <div class="row">
+           <button type="submit" class="btn btn-primary challbtn share-btn" style="width: 25%;" >Ok</button>
+         <button type="button" class="btn btn-primary challbtn share-btn" data-dismiss="modal">Cancel</button></center>
+         </div></center>
+            </form>
+        </div>
+    </div>
+  </div>
+
+
+
+{%block content%}
+          
+{% endblock%}
+ 
+
+
+<!-- <div class="footer1" style="margin-top:20px;">
+
+ <div class="container">
+
+  <div class="row">
+
+   <div class="col-md-12">
+
+    <center><div class="copyright" style="margin-left: 32px;" >
+
+      &copy; 2017 - Gift
+
+    </div></center>
+
+   </div>
+
+  </div>
+
+ </div>
+</div>-->
+ <footer> <strong><p style="color: black"> &copy; 2017 - Gift</p></strong></footer>
+
+

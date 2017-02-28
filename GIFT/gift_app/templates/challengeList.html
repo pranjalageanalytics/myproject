@@ -1,0 +1,502 @@
+ {% extends "base.html" %} {% load table_tags %} {% load staticfiles %}
+
+{%block styleBlock%}
+<style type="text/css">
+.modal {
+	overflow: auto
+}
+
+.modal.modal-wide .modal-dialog {
+	width: 80%;
+}
+
+.item {
+	margin-left: 2%;
+	width: 75%;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.itemassets {
+	margin-left: 2%;
+	width: 75%;
+}
+
+.modal-wide .modal-body {
+	overflow-y: auto;
+}
+
+#textarea {
+	margin-left: 2%;
+}
+
+.chkbox-width {
+	width: 15%
+}
+
+#extraasst {
+	margin-left: 15%;
+	width: 135%;
+}
+
+#extraasst_quantity {
+	margin-left: 70%;
+	width: 20%;
+}
+
+.asets_quantity_left {
+	width: 7%;
+	margin-left: 38%;
+	position: absolute;
+	margin-top: -5%
+}
+
+.asets_desc_left {
+	width: 50%;
+	margin-left: 48%;
+	position: absolute;
+	margin-top: -5%
+}
+
+label {
+	margin-top: 20px;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.modal-wide .modal-body {
+	overflow: hidden;
+}
+</style>
+{%endblock%} {%block ScriptBlock%}
+<script>
+	$(document).ready(function() {
+		
+		var t = document.getElementById('usergroupstable');
+		var row = t.rows.length
+		var rows = row-1
+		var j = 2
+		var k = 3
+		/* alert(t.rows.length) */
+
+		// jQuery to get the content of row 4, column 1
+		for (i=1 ; i<=rows ; i++)
+			{
+		 var val = $(t.rows[i].cells[j]).text();  
+		/* alert(val)  */
+	        
+			 if (val == "host_approve") {
+				/*alert("1nd if");*/
+				$(t.rows[i].cells[j]).text("approve");
+
+			}
+			else if(val == "host_decline") {
+				/*alert("2nd if");*/
+				$(t.rows[i].cells[j]).text("rejected");
+
+			} 
+			else{
+				$(t.rows[i].cells[j]).text("pending");
+				
+			}
+		
+			}
+		
+		 
+		
+		
+			
+			
+		$.ajax({
+
+			url : '/mygift/hostname/',
+			type : "GET",
+			
+		}).done(function(data){
+		        console.log(data);
+		        
+		        var t = document.getElementById('usergroupstable');
+				var row = t.rows.length
+				/* console.log("row lnght",row) */
+						
+							for(j=0 ; j<=data.length ;j++)
+				 
+					 {
+					 
+					
+					for (i=1 ; i<=row-1 ; i++)
+						
+
+			{
+							
+						
+						var val = $(t.rows[i].cells[k]).text(); 
+						
+						/* console.log("val is",val)
+		
+		                    console.log(data[j].user) 
+		  */
+		 
+		 if(val == data[j].user)
+			 {
+			 
+			 console.log("in if")
+			 $(t.rows[i].cells[k]).text(data[j].organization)
+			 console.log(data[j].organization)
+			 
+			 } 
+			 
+			}
+					 
+					 }
+				
+				
+				
+		        
+		});
+		
+		
+		
+		
+		
+		$("#approve").on("click", function() {
+			
+			
+			challenge_id = $(this).closest('tr').find('td:eq(0)').html();
+			console.log(challenge_id)
+		     
+		     
+		     
+		       url='/mygift/challengeapprove/';       
+		     challengeapprove(url,challenge_id); 
+	    	
+		    	
+		    	
+		    });
+		
+		
+$(".fa").on("click", function() {
+	 $('.viewOnlyAccess').prop("disabled", true);
+			/*alert("hii.........")*/
+			challenge_id = $(this).closest('tr').find('td:eq(0)').html();
+			
+			 console.log(challenge_id)
+		     
+		     $("#challenge_id").val(challenge_id);
+			 $("#challenge").val(challenge_id);
+		    	
+		     
+		       url='/mygift/viewchallenge/';       
+		     challengeview(url,challenge_id);  
+	    	 
+		    	
+		    	
+		    });
+		
+      $("#reject").on("click", function() {
+			
+    	 
+			challenge_id = $(this).closest('tr').find('td:eq(0)').html();
+			console.log(challenge_id)
+		     
+		     
+		     
+		       url='/mygift/challengereject/';       
+		     challengerej(url,challenge_id); 
+	    	
+		    	
+		    	
+		    });
+	});
+	
+	
+	function challengeapprove(url,challenge_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'challenge_id' : challenge_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data.length);
+				   
+				   
+				   });
+	}					
+	
+	function challengerej(url,challenge_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'challenge_id' : challenge_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data.length);
+				   
+				   
+				   });
+	}					
+	
+	function challengeview(url,challenge_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'challenge_id' : challenge_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data);
+				   $('#id_decline_volunteers').val(data[0].decline_volunteers);
+					
+				   $('#id_title').val(data[0].title);
+				   
+				   $('#id_description').val(data[0].description);
+				   
+				   $('#id_venue').val(data[0].venue);
+				   
+				   $('#id_user').val(data[3].full_name);	
+				  $('#id_contact').val(data[0].contact_no);
+				   				   
+				  $('#id_organization').val(data[3].organization);
+
+			           $('#id_post_date').val(data[0].post_date);
+				   $('#id_venue').val(data[2].city);
+				   
+				   $('#id_website').val(data[3].website);
+				   
+				   $('#id_email').val(data[4].email);
+				   
+				   $('#id_start_date').val(data[0].start_date);
+				   
+				   $('#id_end_date').val(data[0].end_date);
+				   
+				   $('#id_start_time').val(data[0].start_time);
+				   
+				   $('#id_end_time').val(data[0].end_time);
+				   
+				   $('#id_requested_volunteers').val(data[0].requested_volunteers);
+				  
+				   $('#id_commited_volunteers').val(data[0].commited_volunteers);
+					
+				   $('#id_accepted_volenteers_by_host').val(data[0].accepted_volenteers_by_host);
+					
+				   $('#id_declined_volenteers_by_host').val(data[0].declined_volenteers_by_host);
+				   $('#id_category').val(data[1].category_name);
+					
+				   
+				   
+				   });
+	}					
+	
+	
+	</script>
+{%endblock%} {% block content %}
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List of Challenges</h3>
+
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body" id="">{% render_table ChallengeList %}</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+</section>
+
+<!-- delete modal -->
+<div id="rejectchallenge" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Modal Header</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container">
+					<p>Are you sure you want to reject?</p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<form id="" action="{% url 'mygift:rejectChallenge' %}"
+					method="POST" name="">
+					{% csrf_token %} <input type="hidden" name="challenge_id"
+						id="challenge_id" value="" />
+					<button type="submit" class="btn btn-default">Yes</button>
+					<a data-dismiss="modal" data-toggle="modal" href="#myModal"><input
+						type="button" class="btn btn-primary" ; value="NO"></a>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end delete modal -->
+<!-- Modal -->
+<div id="myModal" class="modal fade modal-wide" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="{% url 'mygift:approveChallenge' %}" method="post"
+				id="leaseinForm">
+				{% csrf_token %} <input type="hidden" name="challenge"
+					id="challenge" value="" />
+
+				<div class="modal-header">
+					<div class="modal-body">
+
+						<div class="container">
+							<div class="col-lg-12">
+								<div class="row">
+
+									<div class="col-sm-18">
+										<div class="row form-group">
+											<label> CHALLENGE DETAILS</label>
+										</div>
+									</div>
+									<!--./roe form-group  -->
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Challenge Name</label> {{ ChallengeTypeForm.title }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Challenge Category</label>{{ CategoryLocationRelForm.category }}
+											
+											
+										</div>
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Location</label> {{ ChallengeTypeForm.venue }}
+										</div>
+									</div>
+
+									<div class="row">
+
+										<div class="col-sm-3 form-group" id="column_space"
+											style="width: 79%; margin-left: 3%;">
+											<label style="margin-left: 2%;">Challenge Description</label>{{ ChallengeTypeForm.description }}
+											
+											
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Name</label> {{ UserTypeForm.user }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Contact No</label>{{ UserTypeForm.contact }}
+
+										</div>
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Organisation</label> {{ UserTypeForm.organization }}
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Website</label> {{ UserTypeForm.website }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Email</label>{{ AuthUserForm.email }}
+
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Post Date</label>{{ ChallengeTypeForm.post_date }}
+
+										</div>
+
+									</div>
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Start Date</label> {{ ChallengeTypeForm.start_date }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>End Date</label> {{ ChallengeTypeForm.end_date }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Start Time</label>{{ ChallengeTypeForm.start_time }}
+
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>End Time</label> {{ ChallengeTypeForm.end_time }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Required Volunteers</label> {{ ChallengeTypeForm.requested_volunteers }}
+											
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Challenge Accepted Volunteers</label>{{ ChallengeTypeForm.commited_volunteers }}
+											
+											
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Challenge Rejected Volunteers</label> {{ ChallengeTypeForm.decline_volunteers }}
+											
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Volunteers Accepted by Host</label> {{ ChallengeTypeForm.accepted_volenteers_by_host }}
+											
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Volunteers Rejected by Host</label>{{ ChallengeTypeForm.declined_volenteers_by_host }}
+											
+											
+										</div>
+
+									</div>
+
+
+
+
+								</div>
+
+								<div class="modal-footer" style="width: 80%;">
+									<input type="submit" class="btn btn-success" ; id="idClose"
+										; value="APPROVE">
+
+									<button type="button" class="btn btn-default" onclick="ref()"
+										; id="idClose" data-dismiss="modal">Close</button>
+									<a data-dismiss="modal" data-toggle="modal"
+										href="#rejectchallenge"><input type="button"
+										class="btn btn-primary" ; value="REJECT"></a>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				</form>
+		</div>
+		<!--col-sm-18  -->
+	</div>
+
+
+</div>
+
+
+
+
+{%endblock%}
+<!-- /.content -->

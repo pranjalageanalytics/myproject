@@ -1,0 +1,287 @@
+ <meta http-equiv = "refresh" content = "15">
+
+{% extends "admin.html" %} 
+{% load table_tags %}
+{% load staticfiles %}
+ {% load notifications_tags %}
+ {% notifications_unread as unread_count %}
+    <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
+<script type="text/javascript" src="{% static 'js/notification.js' %}" ></script>
+
+{%block styleBlock%}
+<style type="text/css">
+
+.main-footer {
+    background: #fff;
+    padding: 3px !important;
+    color: #444;
+    border-top: 1px solid #d2d6de;
+}
+
+#scr.scroll{
+
+background-color: #00FFFF;
+   
+    overflow: scroll;
+}
+
+.modal-footer {
+    padding: 15px;
+    text-align: right;
+    
+}
+.modal-footer {
+    border-top-color: rgba(114, 81, 81, 0);
+}
+.modal-footer {
+    padding: 48px;
+    text-align: right;
+    margin-left:106px;
+}
+.modal {
+	overflow: auto
+}
+
+
+.form-control[disabled], fieldset[disabled] .form-control {
+    cursor: auto;
+}
+
+.header1
+{
+    margin-left: 380px;
+    font-size: 140%;
+   
+    border-color: blue
+}
+
+.modal.modal-wide .modal-dialog {
+	width: 80%;
+}
+
+.item {
+	margin-left: 2%;
+	width: 75%;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.itemassets {
+	margin-left: 2%;
+	width: 75%;
+}
+
+.modal-wide .modal-body {
+	overflow-y: auto;
+}
+
+#textarea {
+	margin-left: 2%;
+}
+
+.chkbox-width {
+	width: 15%
+}
+
+#extraasst {
+	margin-left: 15%;
+	width: 135%;
+}
+
+#extraasst_quantity {
+	margin-left: 70%;
+	width: 20%;
+}
+
+.asets_quantity_left {
+	width: 7%;
+	margin-left: 38%;
+	position: absolute;
+	margin-top: -5%
+}
+
+.asets_desc_left {
+	width: 50%;
+	margin-left: 48%;
+	position: absolute;
+	margin-top: -5%
+}
+
+label {
+	margin-top: 20px;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.modal-wide .modal-body {
+	overflow: hidden;
+}
+</style>
+{%endblock%} {%block ScriptBlock%}
+<script>
+
+$(document).ready(function() {
+	
+	
+	
+	/* $("tr:odd").css("background-color", "yellow"); */
+	
+	var aa=($(this).find('td:eq(4)').html());
+	$('#notificationtable tbody tr td:nth-child(5)').each( function(){
+		 
+		   //add item to array
+		   var data=$(this).text() ;
+		  /*  items.push( $(this).text() ); */ 
+		   var d= $(this).closest("tr");
+		 console.log($(this).text());
+		 if (data=="True")
+		 {
+		  $(this).closest("tr").css("background-color","lightGray");
+		  console.log("in akshay 2");
+		 }
+		 else{
+		  console.log("not in akshay2");
+		 }
+		});
+	
+
+		    
+		    
+$(".fa").on("click", function() {
+	 $('.viewOnlyAccess').prop("disabled", false);
+			//alert("hii.........");
+			
+			
+			notification_id = $(this).closest('tr').find('td:eq(1)').html();
+			
+			 console.log(notification_id)
+		     
+		    
+		       url='/mygift/viewnotification/';       
+		       viewnotification(url,notification_id);  
+	    	 
+		    	
+		    	
+		    });
+		
+		
+		
+		
+	
+	
+	function viewnotification(url,notification_id){
+		  $.ajax({
+		     url : url,
+		     type : "GET",
+		     data:{'notification_id' : notification_id}
+		     }) 
+		     .done(function(data) {
+		       
+		    	 //console.log(data);
+		    	$.each(data,function(key ,value){
+		    		
+		    		console.log()
+		    		console.log(data);
+		    		
+		    		   //$('#actor').val(data[0].actor_object_id.);
+		    		   $('#notification_id').val(data[0].id);
+		    		   $('#verb').val(data[0].verb);	    		
+		    		
+		    	});
+		     });
+	}
+		    	
+		        
+		    	
+	              
+					
+});		
+		
+
+
+function myread() {
+	var notification_id=$('#notification_id').val();
+    //alert("@@@@@@@@@@"+notification_id);
+    url='/mygift/mark_as_read/' ,
+    markread(url,notification_id);
+    console.log("notification_id"+notification_id);
+	//document.getElementById("demo").innerHTML = "Hello World";
+    window.location.reload();
+    //alert("reload");
+   
+}	    
+
+		
+function markread(url,notification_id){
+	$.ajax({
+		url:url,
+		type:"GET",
+		data:{'notification_id' : notification_id}
+		
+	})
+	.done(function(data){
+	//alert("$$$$$$$$$$$$$$$$$$");	
+		
+	});
+
+	
+	
+}
+
+	</script>
+{%endblock%} {% block content %}
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List of Notification</h3>
+
+				</div>
+				<!-- /.box-header -->
+			
+				<div class="box-body" id="">{% render_table notificationlist %}</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+</section>
+
+
+
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content" style="margin-top:165px;border-radius:20px;width:520px;" >
+        <div class="modal-header" style="background-color:#3c8dbc;border-top-left-radius: 17px;border-top-right-radius: 17px;"">
+          <button type="button" class="close" data-dismiss="modal" onclick="myread();">&times;</button>
+          <h4 class="modal-title" style="color: #fff">Notification Details</h4>
+        </div>
+        <div class="modal-body">
+        <input type="hidden" name="notification_id" id="notification_id" value=""/>
+        
+         
+      
+         <input type="text" id="verb"  style="text-shadow: 2px;width: 100%;background-color: transparent;border: 0px solid;font-weight: bold;">
+         <!-- color:#adad85; -->
+         
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="close" onclick="myread();">Close</button>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+{%endblock%}

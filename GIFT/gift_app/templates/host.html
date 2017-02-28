@@ -1,0 +1,370 @@
+{% extends "base.html" %} {% load table_tags %} {% load staticfiles %}
+
+{%block styleBlock%}
+<style type="text/css">
+.modal.modal-wide .modal-dialog {
+	width: 80%;
+}
+
+.image {
+	margin-left: 100px;
+}
+
+.item {
+	margin-left: 2%;
+	width: 75%;
+}
+
+.itemassets {
+	margin-left: 2%;
+	width: 75%;
+}
+
+.modal-wide .modal-body {
+	overflow-y: auto;
+}
+
+#textarea {
+	margin-left: 2%;
+}
+
+.chkbox-width {
+	width: 15%
+}
+
+#extraasst {
+	margin-left: 15%;
+	width: 135%;
+}
+
+#extraasst_quantity {
+	margin-left: 70%;
+	width: 20%;
+}
+
+.asets_quantity_left {
+	width: 7%;
+	margin-left: 38%;
+	position: absolute;
+	margin-top: -5%
+}
+
+.asets_desc_left {
+	width: 50%;
+	margin-left: 48%;
+	position: absolute;
+	margin-top: -5%
+}
+
+label {
+	margin-top: 20px;
+}
+
+#column_space {
+	margin-left: 3%;
+}
+
+.modal-wide .modal-body {
+	overflow: hidden;
+}
+</style>
+{%endblock%} {%block ScriptBlock%}
+<script>
+	$(document).ready(function() {
+		var t = document.getElementById('usertypetable');
+		var row = t.rows.length
+		var rows = row-1
+		var j = 4
+		alert(t.rows.length)
+
+		// jQuery to get the content of row 4, column 1
+		for (i=1 ; i<=rows ; i++)
+			{
+		 var val = $(t.rows[i].cells[j]).text();  
+		alert(val) 
+	        
+			 if (val == "3") {
+				alert("1nd if");
+				$(t.rows[i].cells[j]).text("approve");
+
+			}
+			else if(val == "2") {
+				alert("2nd if");
+				$(t.rows[i].cells[j]).text("rejected");
+
+			} 
+			else{
+				$(t.rows[i].cells[j]).text("pending");
+				
+			}
+		
+			}
+		
+
+		$("#approve").on("click", function() {
+			
+			
+			host_id = $(this).closest('tr').find('td:eq(0)').html();
+			
+		     
+		     
+		     
+		       url='/mygift/hostapprove/';       
+		     hostapprove(url,host_id); 
+	    	
+		    	
+		    	
+		    });
+$("#reject").on("click", function() {
+			
+			
+			host_id = $(this).closest('tr').find('td:eq(0)').html();
+			
+		     
+		     
+		     
+		       url='/mygift/hostreject/';       
+		     hostrej(url,host_id); 
+	    	
+		    	
+		    	
+		    });
+		    
+		    
+$(".fa").on("click", function() {
+	 $('.viewOnlyAccess').prop("disabled", true);
+			/*alert("hii.........")*/
+			host_id = $(this).closest('tr').find('td:eq(0)').html();
+			
+			 console.log(host_id)
+		     
+		     $("#host_id").val(host_id);
+			 $("#host").val(host_id);
+		       url='/mygift/viewhost/';       
+		    hostview(url,host_id);  
+	    	 
+		    	
+		    	
+		    });
+		
+		
+		
+		
+	});
+	
+	function hostview(url,host_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'host_id' : host_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data);
+				   var msg = data[0].image
+				   if(msg.startsWith("./"))
+			       { 
+			      var newVal=msg.split(".");
+			      var Val=("../../static/img".concat(newVal[1])).concat(".".concat(newVal[2]));
+			      $('#id_image').attr('src',Val);}
+			     else{
+			      var word=msg.split(",");
+			      $('#id_image').attr('src',word[1]);
+			      }
+				   
+				   $('#id_full_name').val(data[0].full_name);
+				   $('#id_organization').val(data[0].organization);
+				   $('#id_contact').val(data[0].contact);
+				   $('#id_website').val(data[0].website);
+				   $('#id_hometown').val(data[0].hometown);
+				   $('#id_date_of_birth').val(data[0].date_of_birth);
+				   $('#id_occupation').val(data[0].occupation);
+				   $('#id_user').val(data[1].email);
+				   
+				   
+				   });
+	}	
+	function hostapprove(url,host_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'host_id' : host_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data.length);
+				   
+				   
+				   });
+	}	
+	
+	function hostrej(url,host_id){
+		$.ajax({
+			  url : url,
+			  type : "GET",
+			  data:{'host_id' : host_id}
+			  }) 
+			  .done(function(data) {
+				   console.log(data.length);
+				   
+				   
+				   });
+	}	
+	
+	
+	</script>
+{%endblock%} {% block content %}
+
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<h3 class="box-title">List of Host</h3>
+
+
+
+				</div>
+				<!-- /.box-header -->
+
+				<div class="box-body" id="">{% render_table HostList %}</div>
+
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+</section>
+
+
+<!-- delete modal -->
+<div id="rejecthost" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Modal Header</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container">
+					<p>Are you sure you want to reject?</p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<form id="" action="{% url 'mygift:rejectHost' %}" method="POST"
+					name="">
+					{% csrf_token %} <input type="hidden" name="host_id" id="host_id"
+						value="" />
+					<button type="submit" class="btn btn-default">Yes</button>
+					<a data-dismiss="modal" data-toggle="modal" href="#myModal"><input
+						type="button" class="btn btn-primary" ; value="NO"></a>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end delete modal -->
+<!-- Modal -->
+<div id="myModal" class="modal fade modal-wide" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="{% url 'mygift:approveHost' %}" method="post"
+				id="leaseinForm">
+				{% csrf_token %} <input type="hidden" name="host" id="host" value="" />
+
+
+
+				<div class="modal-body">
+
+					<div class="container">
+						<div class="col-lg-12">
+							<div class="row">
+
+								<div class="col-sm-18">
+									<div class="row form-group">
+										<label> HOST DETAILS</label>
+
+										<!-- <input type="image" src="../../static/img/Lighthouse_qBv0cYV.jpg">  -->
+									</div>
+									<!--./roe form-group  -->
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>User Name</label>{{ UserTypeForm.user }}
+										</div>
+
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Organisation</label>{{ UserTypeForm.organization }}
+
+										</div>
+										<div>
+											<input type="image" id="id_image" class="image" height="80"
+												width="125">
+
+										</div>
+
+									</div>
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Full Name</label>{{ UserTypeForm.full_name }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Contact</label>{{ UserTypeForm.contact }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Website</label> {{ UserTypeForm.website }}
+										</div>
+
+
+									</div>
+
+									<div class="row">
+										<div class="col-sm-3 form-group" id="column_space" style="">
+											<label>Birth Date</label>{{ UserTypeForm.date_of_birth }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Occupation</label> {{ UserTypeForm.occupation }}
+										</div>
+										<div class="col-sm-3 form-group" id="column_space">
+											<label>Hometown</label>{{ UserTypeForm.hometown }}
+
+										</div>
+
+									</div>
+								</div>
+								<div class="modal-footer" style="width: 80%;">
+									<input type="submit" class="btn btn-success" ; id="idClose"
+										; value="APPROVE">
+
+									<button type="button" class="btn btn-default" onclick="ref()"
+										; id="idClose" data-dismiss="modal">Close</button>
+									<a data-dismiss="modal" data-toggle="modal" href="#rejecthost"><input
+										type="button" class="btn btn-primary" ; value="REJECT"></a>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- /.row -->
+				</div>
+				</form>
+		</div>
+
+
+	</div>
+</div>
+
+
+
+
+
+
+{%endblock%}
+<!-- /.content -->

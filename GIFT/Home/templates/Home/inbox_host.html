@@ -1,0 +1,71 @@
+{% extends "base3.html" %}
+{% load static from staticfiles %}
+
+
+{% block content %}
+
+
+<div class="container">
+<br><br>
+<div class="jumbotron">
+ 
+ 
+<label style="color: rgba(119, 119, 119, 0.73">Notification</label> 
+<div class="form-activate1 inbox">
+
+         
+  <table class="table" style="margin-bottom: 0px;">
+    
+    <tbody>
+    
+    {% for obj in object %}
+    
+      <tr>
+        <td style="width: 100px;"><div class="tl-icon" style="background-color:#00bca4;"><i class="fa fa-bell-o" style="color: #fff;"></i></div></td> 
+        <!-- <td style=" width: 200px;">Title Name</td> -->
+      
+        <td>{{obj.message}}</td>
+        
+      </tr>
+      
+      {% endfor %}
+
+ 
+    </tbody>
+  </table>
+
+	
+
+</div>
+
+<br>
+
+<!-- <label style="color: rgba(119, 119, 119, 0.73">Yestraday</label>
+<div class="form-activate1 inbox">
+	
+          
+  <table class="table" style="margin-bottom: 0px;">
+    
+    <tbody>
+    {% for obj in object %}
+      <tr>
+        <td style="width: 100px;"><div class="tl-icon" style="background-color:#00bca4;"><i class="fa fa-user" style="color: #fff;"></i></div></td>
+        
+        <td>{{obj.message}}</td>
+        
+      </tr>
+       {% endfor %}
+
+      
+    </tbody>
+  </table>
+
+    
+    
+    
+</div> -->
+ 
+</div><!-- jumbotron -->
+</div>
+                            		
+{% endblock%}   

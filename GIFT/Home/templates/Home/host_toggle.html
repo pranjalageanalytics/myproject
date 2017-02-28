@@ -1,0 +1,104 @@
+{% extends "base2.html" %}
+{% load static from staticfiles %}
+
+
+
+
+{% block content %}
+<script>
+$(document).ready(function(){
+ //alert("hiii");
+
+  
+  
+ $("#sub").click(function(){
+
+ 	flag = true;
+       
+       var organization = document.getElementById('organization').value	
+       var website = document.getElementById('website').value
+      
+   if(organization=="")
+         
+       {
+    $("#err4").show();
+    
+       document.getElementById('err4').innerHTML=" This field is required!";
+     document.getElementById("host_name").style.borderColor = "#E34234";
+
+       flag=false;
+       
+        }
+       else{
+        
+        $("#err4").hide();
+           
+           document.getElementById("err4").style.borderColor = "#ccc"; 
+        
+       }
+       
+
+ if(website=="")
+     
+ {
+  $("#err5").show();
+  
+     document.getElementById('err5').innerHTML=" This field is required!";
+   document.getElementById("website").style.borderColor = "#E34234";
+
+     flag=false;
+     
+     }
+ else{
+    
+    $("#err5").hide();
+     
+     document.getElementById("err5").style.borderColor = "#ccc"; 
+    $("#form_toggle").submit();
+ }
+ 
+ return flag;
+ 
+ 
+ });
+
+ 
+    
+});
+</script>
+<div class="container">
+ <form action="{% url 'home:host_toggle_save' %}" id="form_toggle" method="POST" enctype='multipart/form-data'>
+  {% csrf_token %}
+  <br><br>
+ <center> <label><h3 style="margin-left: 55px;">Please fill the details to register as Host</h3></label></center><br><br>
+    <div class="row field">
+    <div class="col-md-6 col-sm-offset-4">
+   
+     <div class="form-group stlye">
+		      <label for="name" style="color: #0072bc;">Organisation Name<span style="color:red;">*</span></label>
+	          <input type="text" class="form-control1" name="organization" id="organization" style="width: 78%; height: 98%;">
+	           <div id="err4" style="color:red;"></div>
+		    </div>
+    
+  
+   
+      <div class="form-group">
+		      <label for="text" style="color: #0072bc;">Website<span style="color:red;">*</span></label>
+	          <input type="text" class="form-control1"  name="website" id="website" style="width: 78%; height: 98%;">
+	           <div id="err5" style="color:red;"></div>
+		    </div>
+     </div>
+    </div>
+    
+    
+  
+        <div class="submitbtn">
+          <input type="button" id="sub" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;" value="Ok">&nbsp;
+         <a href="{% url 'home:gifter_update' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; width: 97px;height: 33px; padding:7px 26px 9px 26px;"> Cancel</button> </a>
+         
+        </div> 
+ </form>   
+</div>
+
+
+{% endblock%}     
