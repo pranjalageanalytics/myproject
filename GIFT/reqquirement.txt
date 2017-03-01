@@ -22,6 +22,7 @@ pytz==2016.7
 redis==2.10.5
 requests==2.11.1
 requests-oauthlib==0.6.2
+fcm-django==0.2.3
 django-notifications-hq==1.2
 django-datatable==0.2.0
 six==1.10.0
