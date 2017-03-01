@@ -29,8 +29,8 @@ from pickle import APPEND
 from django.contrib.auth.decorators import login_required
 
 
-BASE_URL="http://192.168.1.129:8063/rest-auth/";
-GIFT_URL="http://192.168.1.129:8063/gift/v1/";
+BASE_URL="http://192.168.1.129:8043/rest-auth/";
+GIFT_URL="http://192.168.1.129:8043/gift/v1/";
 
 
 def category_unselect(request):
@@ -802,7 +802,7 @@ def reset_password_save(request):
                 password="Your old password was entered incorrectly. Please enter it again"
                 return render(request,"Home/reset_password.html",{'password':password,'email':str(request.session['email'])})   
             if response.status_code== 200:
-                password1="Your password has been change successfully .Please login"
+                password1="Your password has been changed successfully, Please login"
                 del request.session['name']
                 del request.session['email']
                 del request.session['password']
@@ -869,9 +869,8 @@ def Challenge(request):
     try:
         headers={"Authorization":"Bearer"+str(request.session['name'])}    
         r = requests.get(GIFT_URL+'gifterchallenge/2/'+str(request.session['userid']),headers=headers)
+        object_list =r.json()
         date= datetime.date.today()
-	object_list =r.json()
-        
         if object_list:   
             for obj in object_list:
                 #print("AAAAAAAAAAAAAA", obj)
@@ -943,8 +942,8 @@ def My_Challenge(request):
     try:
         headers={"Authorization":"Bearer"+str(request.session['name'])}  
         r = requests.get(GIFT_URL+'gifter_mychallenge_list/'+str(request.session['userid']),headers=headers)
+        object_list =r.json()
         date= datetime.date.today()
-	object_list =r.json()
         if object_list:
         
             for obj in object_list:
@@ -961,7 +960,8 @@ def My_Challenge(request):
                     t1=aa.split(':')
                     #print(t1)
                     final_val=None
-                    if int(t1[0])>12:
+                    
+                    if int(t1[0])>12:                       
                        k1=int(t1[0])-12 
                        if abs(k1)==0:
                                final_val=str('00')+":"+str(t1[1])+":"+"PM"
@@ -1109,15 +1109,15 @@ def set_goal(request):
             object_list12 =r_after_update.json()
             for value in object_list12:
                 value['goal_hours']=value['goal_hours']/60
-            
+             
             r1 = requests.get(GIFT_URL+"getrewards/2/"+str(request.session['userid']),headers=headers)
             print("Gifter Rewards",r1)
             obj_earn =r1.json()
             print("my goal",obj_earn)
             for value in obj_earn:
                 rewards=value['rewards_point']
-                print("get rewards",rewards)   
-
+                print("get rewards",rewards)                   
+          
             r_after_updatepercent = requests.get(GIFT_URL+"goalpercentage/"+str(request.session['userid']))
     #         print("eeeee",r_after_updatepercent.content)
             object_list1 =r_after_updatepercent.json()
@@ -1855,9 +1855,9 @@ def challenge_update(request,pk):
             else:
                k1=int(t1[0])
                if k1==0:
-                       final_val=str('00')+":"+str(t1[1])+":"+"AM"
+                       final_val1=str('00')+":"+str(t1[1])+":"+"AM"
                else:
-                       final_val=str(k1)+":"+str(t1[1])+":"+"AM"
+                       final_val1=str(k1)+":"+str(t1[1])+":"+"AM"
             #print("final_val: ",final_val)
             data['challenge']['start_time']= final_val
          start_time=final_val
@@ -1875,7 +1875,7 @@ def challenge_update(request,pk):
                k1=int(t1[0])-12 
                if abs(k1)==0:
                    #print ("hours : ",k1)
-                   final_val1=str('00')+":"+str(t1[1])+":"+"PM"
+                   final_val=str('00')+":"+str(t1[1])+":"+"PM"
                else: 
                    final_val1=str(abs(k1))+":"+str(t1[1])+":"+"PM"
             else:

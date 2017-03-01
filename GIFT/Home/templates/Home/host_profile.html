@@ -63,8 +63,7 @@ $(document).ready(function(){
   
          <button type="button" class="btn1 btn-default" data-toggle="modal" data-target="#giftermodal"    style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Switch Gifter</button>
     {% else %}
-          <a href="{% url 'home:gifter_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Gifter</button> </a>
-     
+          <a href="{% url 'home:gifter_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Gifter</button> </a>     
        {% endif %} 
  
     </div>		 
@@ -82,19 +81,19 @@ $(document).ready(function(){
     
     <div class="form-group">
       <label for="text">Home Town</label>
-      <input type="text" class="form-control1 fsize" id="text"  name="hometown" value="{{object.hometown}}" >
+      <input type="text" class="form-control1 fsize" id="text"  name="hometown" value="{{object.hometown}}">
     </div>
     
     <div class="form-group">
       <label for="date">DOB</label>
-      <input type="text" class="form-control1 fsize" id="datepicker" name="dob" value={{object.date_of_birth}}>
+      <input type="text" class="form-control1 fsize" id="datepicker" name="dob" value= {{object.date_of_birth}}>
        <div id="dob_error" style="color:red;"></div>
     </div>
 
      <div class="form-group">
       <label for="date">Full Name</label>
       {% if object.full_name %}
-      <input type="dob" class="form-control form-control1 fsize" name="fullname"  value="{{object.full_name}}">
+      <input type="dob" class="form-control form-control1 fsize" name="fullname"  value= "{{object.full_name}}">
       {% else %}
         <input type="dob" class="form-control form-control1 fsize" name="fullname"  value="">
         {% endif %}
@@ -202,7 +201,8 @@ $(document).ready(function(){
         <center><div>
           <a href="{% url 'home:gifter_toggle' %}" type="button" class="btn btn-primary challbtn share-btn" style="width: 27%;" >Yes</a>
            <button type="button" class="btn btn-primary challbtn cancel-btn" data-dismiss="modal" style="width: 27%;">No</button>
-          </center></div></form>
+          </div>
+	</center></form>
         </div>
       
       </div>

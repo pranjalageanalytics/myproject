@@ -92,10 +92,10 @@ function checkLoginState() {
                    			console.log("value",value)
                    			if(value == 0){
                    				console.log("not selcted")
-                   				window.location.href="http://192.168.1.129:8063/home/category_unselect/"
+                   				window.location.href="http://192.168.1.129:8043/home/category_unselect/"
                    			}else{
                    				console.log("selcted")
-                   				window.location.href="http://192.168.1.129:8063/home/challenge/" 
+                   				window.location.href="http://192.168.1.129:8043/home/challenge/" 
                    			}
 				 	       });  
 				 	     
@@ -136,10 +136,10 @@ function onSignIn(googleUser) {
 			console.log("value",value)
 			if(value == 0){
 				console.log("not selcted")
-				window.location.href="http://192.168.1.129:8063/home/category_unselect/"
+				window.location.href="http://192.168.1.129:8043/home/category_unselect/"
 			}else{
 				console.log("selcted")
-				window.location.href="http://192.168.1.129:8063/home/challenge/" 
+				window.location.href="http://192.168.1.129:8043/home/challenge/" 
 			}
 	       });  
              
@@ -162,9 +162,7 @@ function onSignIn(googleUser) {
   -moz-box-sizing:    border-box;
   box-sizing:         border-box;
 }
-
 .datepicker{z-index:1151 !important;}
-
 html {
   height: 100%;
 }
@@ -319,16 +317,16 @@ footer {
                         
                             </div>
                             <div class="col-sm-6 col-md-6" style="padding: 10px; padding-left: 96px; ">
-                           <b><button type="submit" id="login-form" class="w3-btn w3-yellow w3-border logbtn" style="floaat:right; color: #0072BC;">Log in</b>                            </div>
+                           <b><button type="submit" id="login-form" class="w3-btn w3-yellow w3-border logbtn" style="floaat:right; color: #0072BC;">Log in</b>
                             </div>
                             </div>
-                             <input id="login_lost_btn" type="button" class="btn btn-link"><a href="{% url 'home:forget_password' %}">Forget Password?</a>        		   
-                        	</div>
+                            </div>
+                             <input id="login_lost_btn" type="button" class="btn btn-link"><a href="{% url 'home:forget_password' %}">Forget Password?</a>
+        		    	</div>
         		    	
 				        <div class="modal-footer">
                         <div>
-                       <b><a href="#register-modal" data-toggle="modal" data-dismiss="modal"><button class="w3-btn w3-yellow w3-border" style="color: #0072BC;" >Register As a Gifter</button></a></b>
-                         
+                       <b><a href="#register-modal" data-toggle="modal" data-dismiss="modal"><button class="w3-btn w3-yellow w3-border" style="color: #0072BC;" >Register As a Gifter</button></a></b>                         
                            
                        <b><a href="#registerhost-modal" data-toggle="modal" data-dismiss="modal"><button class="w3-btn w3-yellow w3-border" style="float:right; color: #0072BC;">Register As a Host</button></a></b>                         
                           
@@ -346,11 +344,11 @@ footer {
 				    </div>
 				  </div>
                      
-                                       <div id="fb-root" style="margin-left: 45px;">
+                     <div id="fb-root" style="margin-left: 45px;">
 				        
 					   <fb:login-button scope="email" width="90" height="28"  onlogin="checkLoginState();"></fb:login-button>
 					  </div>
-					  <div style="margin-left: 250px; margin-top: -25px; ">
+					  <div style="margin-left: 230px; margin-top: -25px; ">
 					  <div class="g-signin2" data-width="90" data-height="28" data-onsuccess="onSignIn"></div>
 					  </div>
 					  </div>
@@ -400,7 +398,7 @@ footer {
 		    <div class="form-group">
 		      <label for="email" style="color: #0072bc;">Email<span style="color:red;">*</span></label>
 	          <input type="text" class="form-control1" name="email" id="id_email" style="width: 78%; height: 98%;"> 
-	         <div id="error_email" style="color:red;"></div>
+	          <div id="error_email" style="color:red;"></div>
 		    </div>
 		    <div class="form-group">
 		      <label for="text" style="color: #0072bc;">Home Town</label>

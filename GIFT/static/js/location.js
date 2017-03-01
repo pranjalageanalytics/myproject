@@ -48,7 +48,7 @@ $(document).ready(function(){
  	       })
  	       //alert("in location");
 	       $('#location-form').submit()
-	       window.location.href="http://192.168.1.129:8063/home/category/"
+	       window.location.href="http://192.168.1.129:8043/home/category/"
 	}
        else {
     	   var a = document.getElementById("demo1");

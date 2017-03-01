@@ -13,81 +13,54 @@ from .serializers import LocationSerializer,CategoryTypeSerializer,UserChallenge
 UserCategoryCreateSerializer,UserLocationCreateSerializer,CreateMyChallengeSerializer,StatusSerializer,UserCategorySerializer,\
 UserCategoryUpdateSerializer,MyChallengeSerializer,SetGoalSerializer,GetGoalSerializer,UpdateGoalSerializer,GoalSerializer,UserChallengeCategoryLocationListSerializer,\
 MyChallengeListSerializer,GifterAcceptanceSerializer,GifterMyChallengeSerializer,UpdateMyChallengeSerializer,UpdateChallengeImageSerializer,MakeMyFavouriteMyChallengeSerializer,\
-HostFeedbackSerializer,GifterFeedbackSerializer,GifterRankingSerializer,HostRankingSerializer,HostRatingSerializer,NotificationSerializer,GifterRatingSerializer,GetGoalPercentageSerializer,\
+HostFeedbackSerializer,GifterFeedbackSerializer,HostRankingSerializer,GifterRankingSerializer,NotificationSerializer,GifterRatingSerializer,HostRatingSerializer,GetGoalPercentageSerializer,\
 RewardSerializer
 
 from rest_framework.exceptions import APIException
-
-from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.authentication import TokenAuthentication
 from .models import LocationType,CategoryType,UserChallengeCategoryLocationRelRel,UserCategoryRel,UserLocationRel,CategoryLocationRel,MyChallengeRelRel,\
 GiftUserType,StatusType,GiftergoalType,UserType,AuthUserGroups,ChallengeType,UserChallengeCategoryLocationRelRelLocation,UserChallengeCategoryLocationRelRelCategory,\
-HostFeedback,GifterFeedback,GifterRanking,HostRanking,NotificationInbox,HostRating,GifterRating,Reward
+HostFeedback,GifterFeedback,HostRanking,GifterRanking,HostRating,HostRating,GifterRating,NotificationInbox,Reward
+
 from django.contrib.auth.models import User,Group
 from fcm_django.models import FCMDevice
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
-#from django_filters.rest_framework import DjangoFilterBackend
-#import django_filters
-from gift_app.models import UserChallengeCategoryLocationRelRel
-from rest_framework import filters
-from django.core.context_processors import request
-from rest_framework.authentication import SessionAuthentication
-#from #sorl.thumbnail import get_thumbnail
-
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+ 
  
  
 class CreateChallengeImage(generics.RetrieveUpdateAPIView):
-    authentication_classes = (TokenAuthentication,)
     queryset = UserChallengeCategoryLocationRelRel.objects.all() 
     serializer_class= UpdateChallengeImageSerializer
 
-  
-class CreateLocation(generics.ListCreateAPIView):
-    authentication_classes = (TokenAuthentication,)
+ 
+""" web service to retrive & update location according to particular instance"""  
+class LocationRetriveUpdateList(generics.RetrieveUpdateAPIView):
+    serializer_class = LocationSerializer  
+    queryset=LocationType.objects.all()
+ 
+class CreateLocation(generics.ListCreateAPIView): 
     serializer_class = LocationSerializer  
     queryset=LocationType.objects.all().order_by('city')
-    
-    def get_serializer_context(self):
-        print self.request.user
-        return {"request":self.request,} 
+    authentication_classes = (TokenAuthentication,)
     #get_pastchallenge.delay()
  
 """ web service to create  category """  
 class CategoryCreateList(generics.ListCreateAPIView):
-    authentication_classes = (TokenAuthentication,)
     serializer_class = CategoryTypeSerializer
     queryset=  CategoryType.objects.all().order_by('category_name')  
- 
-class GetRewards(generics.ListAPIView): 
     authentication_classes = (TokenAuthentication,)
-    serializer_class=RewardSerializer
-    def get_queryset(self):
-        group_id=self.kwargs['group_id']
-        if group_id=='2':
-            usertype= UserType.objects.filter(user= self.kwargs['user_id'])
-            authuser=AuthUserGroups.objects.filter(user=usertype[0].user,group=Group.objects.get(pk=2))
-            print authuser
-            rewardlist=[]
-            if authuser:
-                queryset=Reward.objects.filter(user=authuser[0].pk)
-                if queryset:
-                    return queryset
-                else:
-                    reward=Reward.objects.create(user=authuser[0],rewards_point=0)
-                    rewardlist.append(reward)
-                    return rewardlist
-        else:
-            raise APIException("Invalid User")
-
+ 
+""" web service to retrive & update category according to particular instance"""  
+class CategoryUpdateRetriveList(generics.RetrieveUpdateAPIView):
+    serializer_class = CategoryTypeSerializer
+    queryset=  CategoryType.objects.all()
      
 """web service to create challenge by host"""
 class UserChallengeCategoryLocation(generics.CreateAPIView):
     serializer_class=UserChallengeCategoryLocationRelRelSerializer    
     queryset=  UserChallengeCategoryLocationRelRel.objects.all()
-    parser_classes = (MultiPartParser, FormParser,JSONParser)
+   # parser_classes = (MultiPartParser, FormParser,JSONParser)
     authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
         return {"group_id": self.kwargs['group_id'],"request":self.kwargs['user_id']} 
@@ -116,12 +89,14 @@ class StatusList(generics.ListAPIView):
     queryset=StatusType.objects.all()
  
  
-class CreateMyChallenge(generics.ListCreateAPIView):     
+class CreateMyChallenge(generics.CreateAPIView): 
     serializer_class= CreateMyChallengeSerializer 
     queryset=MyChallengeRelRel.objects.all() 
+    authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
         print "within view",self.kwargs['user_id']
         return {"group_id": self.kwargs['group_id'],"request":self.kwargs['user_id'],"challenge_id":self.kwargs['challenge_id']}  
+       
     
   
  
@@ -151,8 +126,8 @@ class ChallengeList(generics.ListAPIView):
             return self.queryset.filter(category_location__in=[c.pk for c in category_location])
    
 class HostChallengeList(generics.ListAPIView): 
-    authentication_classes = (TokenAuthentication,)
     serializer_class=UserChallengeCategoryLocationListSerializer
+    authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.request.user
         print user.pk
@@ -168,57 +143,94 @@ class HostChallengeList(generics.ListAPIView):
         else:
             raise APIException("Invalid User")
          
-         
+  
+class GetRewards(generics.ListAPIView): 
+    authentication_classes = (TokenAuthentication,)
+    serializer_class=RewardSerializer
+    def get_queryset(self):
+        group_id=self.kwargs['group_id']
+        if group_id=='2':
+            usertype= UserType.objects.filter(user= self.kwargs['user_id'])
+            authuser=AuthUserGroups.objects.filter(user=usertype[0].user,group=Group.objects.get(pk=2))
+            print authuser
+            rewardlist=[]
+            if authuser:
+                queryset=Reward.objects.filter(user=authuser[0].pk)
+                if queryset:
+                    return queryset
+                else:
+                    reward=Reward.objects.create(user=authuser[0],rewards_point=0)
+                    rewardlist.append(reward)
+                    return rewardlist
+        else:
+            raise APIException("Invalid User")  
+
+       
 class UserSelectedCategory(generics.ListCreateAPIView):
     serializer_class=CategoryTypeSerializer 
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
+        user=self.request.user
+         
         gift_user= User.objects.filter(pk= self.kwargs['user_id'])
-        if gift_user:
-            auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0],group=Group.objects.get(pk=2))          
-            if auth_user_groups:
-                category=UserCategoryRel.objects.filter(user=auth_user_groups[0].pk)
-                cat=CategoryType.objects.filter(category_id__in=[categories.category.pk for categories in category])
-                return cat
-                
+        #print gift_user
+        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0],group=Group.objects.get(pk=2))
+        #print auth_user_groups
+        if auth_user_groups:
+            category=UserCategoryRel.objects.filter(user=auth_user_groups[0].pk)
+            cat=CategoryType.objects.filter(category_id__in=[categories.category.pk for categories in category])
+           
+         #notifications for android end
+            return cat
                         
 class UserSelectedLocation(generics.ListCreateAPIView):
     serializer_class=LocationSerializer 
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
+        user=self.request.user
+         
         gift_user= User.objects.filter(pk= self.kwargs['user_id'])
-        if gift_user: 
-            auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0],group=Group.objects.get(pk=2))
-            if auth_user_groups:
-                location=UserLocationRel.objects.filter(user=auth_user_groups[0].pk)
-                loc=LocationType.objects.filter(id__in=[locations.location.pk for locations in location])
-                return loc
+        #print gift_user
+        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0],group=Group.objects.get(pk=2))
+        #print auth_user_groups
+        if auth_user_groups:
+            location=UserLocationRel.objects.filter(user=auth_user_groups[0].pk)
+            loc=LocationType.objects.filter(id__in=[locations.location.pk for locations in location])
+            print loc
+            return loc
  
  
 class GifterMyChallenge(generics.ListAPIView):
+    #serializer_class=UserChallengeCategoryLocationListSerializer
     serializer_class=GifterMyChallengeSerializer
     authentication_classes = (TokenAuthentication,)
+    #queryset = UserChallengeCategoryLocationRelRel.objects.all()
     def get_queryset(self):
-        user=self.kwargs['user_id']        
-        gift_user= User.objects.filter(pk=self.kwargs['user_id'])        
-        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0].pk,group=Group.objects.get(pk=2))     
+        user=self.request.user
+         
+        gift_user= User.objects.filter(pk= self.kwargs['user_id'])
+        #print gift_user
+        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0].pk,group=Group.objects.get(pk=2))
+        #print auth_user_groups
+        #final_list=[]
         if auth_user_groups:
             queryset=MyChallengeRelRel.objects.filter(~Q(status=StatusType.objects.get(status='complete')),user=auth_user_groups[0]).order_by('-challenge_join_date')
+            """for q in queryset:
+                challenge=UserChallengeCategoryLocationRelRel.objects.filter(pk=q.user_challenge_category_location.pk)
+                for c in challenge:
+                    final_list.append(c)"""
             print queryset
+                 
+            #[Q(tags__name=c) for c in categories]
+            #return self.queryset.filter(pk__in=[c.pk for c in final_list])
             return queryset
         else:
             raise APIException("Invalid User")
-class ProductFilter(filters.SearchFilter):
-    class Meta:
-        model = UserChallengeCategoryLocationRelRel
-        search_fields  =  ['challenge__title','user__usercategorytype','locationtype' ]
+ 
      
 class GifterChallengeList(generics.ListAPIView):
-    #filter_class  =ProductFilter
-    #filter_backends = (filters.SearchFilter,)
-    #search_fields  =  ('challenge__title','user__user','categorytype','locationtype')
-    #queryset=UserChallengeCategoryLocationRelRel.objects.all()
     serializer_class=UserChallengeCategoryLocationListSerializer
+    authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.request.user
         
@@ -278,7 +290,8 @@ class GifterChallengeList(generics.ListAPIView):
             #print open_slots
             new_slot=list(set(abcd) - set(pqrs))
             #print "new list : ", new_slot
-           
+            """for k in new_slot:
+                print k.userchallengecategorylocationrelrel.pk"""
             #print new_slot
             l=UserChallengeCategoryLocationRelRel.objects.filter(pk__in=new_slot)
             #print "l: ",l
@@ -341,7 +354,7 @@ class GifterChallengeList(generics.ListAPIView):
              
         else:
             raise APIException("Invalid User")
-        return last_list 
+        return last_list   
  
                      
                
@@ -353,6 +366,7 @@ class CategoriesCreateViewSet(viewsets.ModelViewSet):
     """
     serializer_class = UserCategorySerializer
     authentication_classes = (TokenAuthentication,)
+     
     def get_queryset(self):
         categories = self.request.query_params.get('categories', None)
         group_id = self.request.query_params.get('group_id', None)
@@ -385,11 +399,11 @@ class CategoriesUpdateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    serializer_class = UserCategorySerializer
-    authentication_classes = (TokenAuthentication,)   
+    serializer_class = UserCategorySerializer    
+    authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         categories = self.request.query_params.get('categories', None)
-        group_id = self.request.query_params.get('group_id', None)
+        group_id = self.request.query_params.get('group_id', None) 
         user_id = self.request.query_params.get('user_id', None)
         if group_id=='2':
             print categories
@@ -480,34 +494,41 @@ class UserLocationUpdate(viewsets.ModelViewSet):
             raise APIException("Invalid User")
     #queryset=UserLocationRel.objects.all()
      
-class SetGoal(generics.ListCreateAPIView):    
+class SetGoal(generics.ListCreateAPIView):
+    
     serializer_class=SetGoalSerializer
     queryset=GiftergoalType.objects.all()
-    authentication_classes = (TokenAuthentication,) 
+    authentication_classes = (TokenAuthentication,)
+    
     def get_serializer_context(self):
-        return {"request":self.kwargs['user_id'],}  
-      
+        return {"request":self.kwargs['user_id'],} 
  
 class UpdateGoal(generics.RetrieveUpdateAPIView):
     serializer_class=UpdateGoalSerializer
     queryset=GiftergoalType.objects.all()
-     
+    authentication_classes = (TokenAuthentication,)
+
 class GetGoal(generics.ListAPIView):
     serializer_class=GetGoalSerializer
-    authentication_classes = (TokenAuthentication,) 
+    authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.kwargs['user_id']
         
         gift_user= AuthUserGroups.objects.filter(user=User.objects.get(pk=user),group=Group.objects.get(pk=2))
         if gift_user:
             getgoal=GiftergoalType.objects.filter(user=gift_user[0])
+            """if setgoal:
+                for s in setgoal:
+                    s.goal_hours=s.goal_hours/60
+                    s.completed_hours=s.completed_hours/60
+                    list1.append(s)"""
             return getgoal
         else:
             raise APIException("Invalid User")
  
 class GoalPercentageCalculation(generics.ListAPIView):
     serializer_class=GetGoalPercentageSerializer
-    authentication_classes = (TokenAuthentication,) 
+    authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.kwargs['user_id']
         list1=[]
@@ -527,9 +548,9 @@ class GoalPercentageCalculation(generics.ListAPIView):
                         #goal.completed_hours=(int(goal.completed_hours)/int(goal.goal_hours))*100
                         goal.completed_tasks=0.0
                     if goal.goal_tasks>0:
-                        goal.completed_tasks=(int(goal.completed_tasks)/int(goal.goal_tasks))*100
+                        goal.completed_tasks=int((int(goal.completed_tasks)/int(goal.goal_tasks))*100)
                     if goal.goal_hours>0:
-                        goal.completed_hours=(int(goal.completed_hours)/int(goal.goal_hours))*100
+                        goal.completed_hours=int((int(goal.completed_hours)/int(goal.goal_hours))*100)
                     #goal.completed_hours=(int(goal.completed_hours)/int(goal.goal_hours))*100
                      
                     print "hours",goal.completed_hours
@@ -542,45 +563,55 @@ class GoalPercentageCalculation(generics.ListAPIView):
 class GifterMyFavouriteChallenge(generics.ListAPIView):
     serializer_class=GifterMyChallengeSerializer
     authentication_classes = (TokenAuthentication,)
+    #queryset = UserChallengeCategoryLocationRelRel.objects.all()
     def get_queryset(self):
         user=self.kwargs['user_id']         
-        gift_user= User.objects.filter(pk= user)       
-        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0].pk,group=Group.objects.get(pk=2))      
+        gift_user= User.objects.filter(pk= user)
+        #print gift_user
+        auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0].pk,group=Group.objects.get(pk=2))
+        #print auth_user_groups
+        #final_list=[]
         if auth_user_groups:
             queryset=MyChallengeRelRel.objects.filter(user=auth_user_groups[0],is_favourite='1').order_by('-challenge_join_date')
+            """for q in queryset:
+                challenge=UserChallengeCategoryLocationRelRel.objects.filter(pk=q.user_challenge_category_location.pk)
+                for c in challenge:
+                    final_list.append(c)"""
             print queryset
+                 
+            #[Q(tags__name=c) for c in categories]
+            #return self.queryset.filter(pk__in=[c.pk for c in final_list])
             return queryset
         else:
             raise APIException("Invalid User")
-        
+
+
 class HostMyPastChallenge(generics.ListAPIView):
     serializer_class=UserChallengeCategoryLocationListSerializer
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.kwargs['user_id']
-        print user
+       # print user.pk
         group_id=self.kwargs['group_id']
         if group_id=='1':
             usertype= UserType.objects.filter(user= user)
             authuser=AuthUserGroups.objects.filter(user=usertype[0].user,group=Group.objects.get(pk=1))
             print authuser
             if authuser:
-                queryset=UserChallengeCategoryLocationRelRel.objects.filter(user=authuser[0].pk,status=StatusType.objects.get(status='complete'))
+                queryset=UserChallengeCategoryLocationRelRel.objects.filter(user=authuser[0],status=StatusType.objects.get(status='complete'))
                
                 return queryset
         else:
-            raise APIException("Invalid User")
+            raise APIException("Invalid User") 
+      
         
-              
 class GifterMyPastChallenge(generics.ListAPIView):
     serializer_class=GifterMyChallengeSerializer
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.kwargs['user_id']      
         gift_user= User.objects.filter(pk= user)
-        print gift_user
         auth_user_groups=AuthUserGroups.objects.filter(user=gift_user[0].pk,group=Group.objects.get(pk=2))
-        print auth_user_groups
         if auth_user_groups:
             queryset=MyChallengeRelRel.objects.filter(user=auth_user_groups[0],status=StatusType.objects.get(status="complete")).order_by('-challenge_join_date')
             return queryset
@@ -590,27 +621,28 @@ class GifterMyPastChallenge(generics.ListAPIView):
 class UpdateMyChallenge(generics.RetrieveUpdateAPIView):
     queryset = MyChallengeRelRel.objects.all() 
     serializer_class= UpdateMyChallengeSerializer
- 
-class MakeFavouriteMyChallenge (generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+
+class MakeFavouriteMyChallenge (generics.CreateAPIView):
     queryset = MyChallengeRelRel.objects.all() 
-    serializer_class= MakeMyFavouriteMyChallengeSerializer
-    authentication_classes = (TokenAuthentication,) 
+    serializer_class= MakeMyFavouriteMyChallengeSerializer 
+    authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
         #print self.request.user
         return {"group_id": self.kwargs['group_id'],"request":self.kwargs['user_id'],"challenge_id":self.kwargs['challenge_id']}  
-             
- 
+
+
 """user will send challenge id for which challenge he wants to see gifter list"""    
 class AcceptGifterChallengewiseByHostList(generics.ListAPIView): 
     serializer_class= MyChallengeListSerializer
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
-        user=self.kwargs['user_id']
-        print user
+        user=self.request.user
+        print user.pk
         try:        
             host_user= AuthUserGroups.objects.filter(user=User.objects.get(pk=self.kwargs['user_id']),group=Group.objects.get(pk=1))
             if host_user:
-                gifter_status=StatusType.objects.filter(Q(status='gifter_approve') | Q(status='edit_approve'))#(status='gifter_approve',status='edit_approve')
+                gifter_status=StatusType.objects.filter(Q(status='gifter_approve'))#(status='gifter_approve',status='edit_approve')
                  
                 print self.kwargs['challenge_id'],host_user[0].pk
                 user_challege_category_location_queryset=UserChallengeCategoryLocationRelRel.objects.filter(pk=self.kwargs['challenge_id'],user=host_user[0].pk)
@@ -642,16 +674,15 @@ class AcceptGifterChallengewiseByHostList(generics.ListAPIView):
             pass
  
  
-         
-"""host will accept challenges by sending gifter id"""   
 class GifterAcceptance(generics.RetrieveUpdateAPIView):
     queryset = MyChallengeRelRel.objects.all() 
     serializer_class= GifterAcceptanceSerializer
     authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
         #print self.request.user
-        return {"gifter": self.kwargs['pk'],"request":self.kwargs['user_id']}  
-    
+        return {"gifter": self.kwargs['pk'],"request":self.kwargs['user_id']}
+
+
 class GetGifterChallengeCompletedList(generics.ListAPIView):  
     serializer_class= MyChallengeListSerializer
     authentication_classes = (TokenAuthentication,)
@@ -677,7 +708,7 @@ class SetHostFeedback(generics.CreateAPIView):
     serializer_class= HostFeedbackSerializer
     authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
-        return {"request":self.kwargs['user_id'],"challenge_id":self.kwargs['challenge_id'],}  
+        return {"request":self.kwargs['user_id'],"challenge_id":self.kwargs['challenge_id'],}    
     
     
 class SetGifterFeedback(generics.CreateAPIView):
@@ -686,31 +717,7 @@ class SetGifterFeedback(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     def get_serializer_context(self):
         return {"gifter":self.kwargs['gifter'],"challenge_id":self.kwargs['challenge_id']}  
-    
-class CheckHostFeedback(generics.ListAPIView):
-    queryset = HostFeedback.objects.all() 
-    serializer_class= HostFeedbackSerializer
-    authentication_classes = (TokenAuthentication,)
-    def get_queryset(self):
-        hostfeedback=HostFeedback.objects.filter(user_challenge_category_location_rel_rel=self.kwargs['challenge_id'],gift_user=self.kwargs['user_id'])                
-        if hostfeedback:
-            return hostfeedback
-        else:
-            return hostfeedback
-        
-class CheckGifterFeedback(generics.ListAPIView):
-    queryset = GifterFeedback.objects.all() 
-    serializer_class= GifterFeedbackSerializer
-    authentication_classes = (TokenAuthentication,)
-    def get_queryset(self):
-        gift_user=MyChallengeRelRel.objects.filter(pk=self.kwargs['gifter'])
-        if gift_user:
-            gifterfeedback=GifterFeedback.objects.filter(user_challenge_category_location=self.kwargs['challenge_id'],gift_user=gift_user[0].user)                
-            if gifterfeedback:
-                return gifterfeedback
-            else:
-                return gifterfeedback
-    
+
 class GetHostRanking(generics.ListAPIView):
     serializer_class= HostRankingSerializer
     authentication_classes = (TokenAuthentication,)
@@ -719,6 +726,7 @@ class GetHostRanking(generics.ListAPIView):
         print user
              
         host_user= AuthUserGroups.objects.filter(user=User.objects.get(pk=user),group=Group.objects.get(pk=1))
+
         if host_user:
             user_challege_category_location_queryset=UserChallengeCategoryLocationRelRel.objects.filter(status=StatusType.objects.get(status='complete'))
             if user_challege_category_location_queryset:
@@ -729,7 +737,7 @@ class GetHostRanking(generics.ListAPIView):
                         for h in hostfeedback:
                             print h.pk
                             if h.point is not None:
-                            	total_sum=int(total_sum+h.point)
+                                total_sum=int(total_sum+h.point)
                             print "sum : ",total_sum
                             host_ranking=HostRanking.objects.filter(user=h.user_challenge_category_location_rel_rel.user)
                             if not host_ranking:
@@ -738,8 +746,8 @@ class GetHostRanking(generics.ListAPIView):
                                 host_ranking.update(host_point=total_sum)
                     
         return HostRanking.objects.all().order_by('-host_point')
-    
-    
+
+
 class GetGifterRanking(generics.ListAPIView):
     serializer_class= GifterRankingSerializer
     authentication_classes = (TokenAuthentication,)
@@ -748,27 +756,27 @@ class GetGifterRanking(generics.ListAPIView):
         print "user : ",user
              
         host_user= AuthUserGroups.objects.filter(user=User.objects.get(pk=user),group=Group.objects.get(pk=2))
-        print "host_user ",host_user
         if host_user:
             gifter_challenge_queryset=MyChallengeRelRel.objects.filter(status=StatusType.objects.get(status='complete'))
             if gifter_challenge_queryset:
                 for challenge in gifter_challenge_queryset:
                     total_sum=0
-                    gifterfeedback=GifterFeedback.objects.filter(gift_user=challenge.user)  
-                    print "gifterfeedback",gifterfeedback              
+                    gifterfeedback=GifterFeedback.objects.filter(gift_user=challenge.user)                
                     if gifterfeedback:
                         for g in gifterfeedback:
                             print g.pk
                             if g.point is not None:
-                            	total_sum=int(total_sum+g.point)
+                                total_sum=int(total_sum+g.point)
                             print "sum : ",total_sum
                             gifter_ranking=GifterRanking.objects.filter(gift_user=g.gift_user)
                             if not gifter_ranking:
                                 rank=GifterRanking.objects.create(gift_user=g.gift_user,gifter_point=total_sum)
                             else:
                                 gifter_ranking.update(gifter_point=total_sum)
+                    
         return GifterRanking.objects.all().order_by('-gifter_point')
     
+        
 class GetNotificationInboxForHost(generics.ListAPIView):
     serializer_class= NotificationSerializer
     authentication_classes = (TokenAuthentication,)
@@ -788,7 +796,6 @@ class GetNotificationInboxForGifter(generics.ListAPIView):
         auth_user=AuthUserGroups.objects.get(user=User.objects.get(pk=user),group=Group.objects.get(pk=2))
         return NotificationInbox.objects.filter(user=auth_user).order_by('-msg_generated_date')
 
-    
 class GetHostRating(generics.ListAPIView):
     serializer_class= HostRatingSerializer
     authentication_classes = (TokenAuthentication,)
@@ -807,10 +814,37 @@ class GetGifterRating(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     def get_queryset(self):
         user=self.kwargs['user_id']
-        gift_user_query= AuthUserGroups.objects.filter(user=User.objects.get(pk=user),group=Group.objects.get(pk=2))
-        print "gift_user_query : ",gift_user_query
-	if gift_user_query:
-            gifterchallenge=GifterRating.objects.filter(gift_user=gift_user_query[0].pk)
+        print user
+        gift_user= AuthUserGroups.objects.filter(user=User.objects.get(pk=user),group=Group.objects.get(pk=2))
+        if gift_user:
+            gifterchallenge=GifterRating.objects.filter(gift_user=gift_user[0].pk)
             return gifterchallenge
         else:
-            raise APIException("Invalid User")
+            raise APIException("Invalid User") 
+
+
+
+class CheckHostFeedback(generics.ListAPIView):
+    queryset = HostFeedback.objects.all() 
+    serializer_class= HostFeedbackSerializer
+    authentication_classes = (TokenAuthentication,)	
+    def get_queryset(self):
+        hostfeedback=HostFeedback.objects.filter(user_challenge_category_location_rel_rel=self.kwargs['challenge_id'],gift_user=self.kwargs['user_id'])                
+        if hostfeedback:
+            return hostfeedback
+        else:
+            return hostfeedback
+
+class CheckGifterFeedback(generics.ListAPIView):
+    queryset = GifterFeedback.objects.all() 
+    serializer_class= GifterFeedbackSerializer
+    authentication_classes = (TokenAuthentication,)
+    
+    def get_queryset(self):
+        gift_user=MyChallengeRelRel.objects.filter(pk=self.kwargs['gifter'])
+   	if gift_user:
+         	gifterfeedback=GifterFeedback.objects.filter(user_challenge_category_location=self.kwargs['challenge_id'],gift_user=gift_user[0].user)                
+         	if gifterfeedback:
+             		return gifterfeedback
+         	else:
+              		return gifterfeedback

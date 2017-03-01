@@ -303,9 +303,6 @@ function myFunction() {
 </div>
 <div style="padding-left: 40px;"><h4><b>Venue:&nbsp;</b>{{obj.user_challenge_category_location.challenge.venue}} </h4></div>
 <div style="padding-left: 40px;"><h4><b>Contact:&nbsp;</b>{{obj.user_challenge_category_location.challenge.contact_no}} </h4></div>
-<div style="padding-left: 40px;"><h4><b>Description:&nbsp;</b>{{obj.user_challenge_category_location.challenge.description}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Direction:&nbsp;</b>{{obj.user_challenge_category_location.challenge.direction}}</h4></div>
-
 {% for key, value in obj.user_challenge_category_location.user.items %}
 <div style="padding-left: 40px;"><h4><b>Email:&nbsp;</b>{{value.email}}</h4></div>
 {% endfor %}
@@ -329,12 +326,11 @@ function myFunction() {
 
 
 <div class="row">
-
 {% if obj.user_challenge_category_location.challenge.reg_expire_date > date|date:"Y-m-d" %}
 
 {% if obj.status == "gifter_approve" %}
 <div class="col-md-4">
-<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}" id="{{ forloop.counter0 }}" data-toggle="modal" data-target="#rejmodal{{ forloop.counter0 }}"  name="reject" id="rejbutton" style="width:80%;margin-bottom: 18px; margin-left: 30px;">REJECT</button>
+<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}" id="{{ forloop.counter0 }}" data-toggle="modal" data-target="#rejmodal{{ forloop.counter0 }}"  name="reject" id="rejbutton" style="width:80%;margin-bottom: 18px; margin-left:30px;">REJECT</button>
 </div>
 <div class="col-md-4">
 <button type="button " class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}" id="{{ forloop.counter0 }}" data-toggle="modal" data-target="#tenmodal{{ forloop.counter0 }}"  name="" id="tenbutton" style="width:80%;margin-bottom: 18px;">TENTATIVE</button>
@@ -344,7 +340,7 @@ function myFunction() {
 
 {% if obj.status == "gifter_decline" %}
 <div class="col-md-4">
-<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}"  id="{{ forloop.counter0 }}"  data-toggle="modal" data-target="#accmodal{{ forloop.counter0 }}"  name="accept" id="accbutton" style="width:80%;margin-bottom: 18px; margin-left: 30px;">ACCEPT</button>
+<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}"  id="{{ forloop.counter0 }}"  data-toggle="modal" data-target="#accmodal{{ forloop.counter0 }}"  name="accept" id="accbutton" style="width:80%;margin-bottom: 18px; margin-left:30px;">ACCEPT</button>
 </div>
 
 <div class="col-md-4">
@@ -355,7 +351,7 @@ function myFunction() {
 
 {% if obj.status == "tentative" %}
 <div class="col-md-4">
-<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}"  id="{{ forloop.counter0 }}" data-toggle="modal" data-target="#accmodal{{ forloop.counter0 }}"  name="accept" id="accbutton" style="width:80%;margin-bottom: 18px; margin-left: 30px;">ACCEPT</button>
+<button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.user_challenge_category_location.pk}}"  id="{{ forloop.counter0 }}" data-toggle="modal" data-target="#accmodal{{ forloop.counter0 }}"  name="accept" id="accbutton" style="width:80%;margin-bottom: 18px;  margin-left:30px;">ACCEPT</button>
 </div>
 
 <div class="col-md-4">
@@ -364,7 +360,6 @@ function myFunction() {
 {% endif %}
 
 {% else %}
-
 
 {% endif %}
 </div><!-- End Row -->
@@ -431,7 +426,7 @@ function myFunction() {
       	{% csrf_token %}
          <p>Are you sure you want to reject the challenge.</p>
         <div class="modal-footer" style="margin-left:50px;">
-           <button type="submit" class="btn btn-primary challbtn share-btn" style="width: 30%;">Ok</button>
+          <button type="submit" class="btn btn-primary challbtn share-btn" style="width: 30%;" >Ok</button>
            <button type="button" class="btn btn-primary challbtn share-btn" data-dismiss="modal">Cancel</button>
         </div>
         </form>

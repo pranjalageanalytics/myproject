@@ -12,13 +12,9 @@ $(document).ready(function(){
   
   
  $("#sub").click(function(){
-
- 	flag = true;
-       
-       var organization = document.getElementById('organization').value	
-       var website = document.getElementById('website').value
-      
-   if(organization=="")
+  flag = true;
+   
+       if(organization.value=="")
          
        {
     $("#err4").show();
@@ -38,7 +34,7 @@ $(document).ready(function(){
        }
        
 
- if(website=="")
+ if(website.value=="")
      
  {
   $("#err5").show();
@@ -93,9 +89,8 @@ $(document).ready(function(){
     
   
         <div class="submitbtn">
-          <input type="button" id="sub" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;" value="Ok">&nbsp;
-         <a href="{% url 'home:gifter_update' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; width: 97px;height: 33px; padding:7px 26px 9px 26px;"> Cancel</button> </a>
-         
+          <button type="button" id="sub" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Ok</button>&nbsp;
+         <a href="#"> <button type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Cancel</button></a>
         </div> 
  </form>   
 </div>

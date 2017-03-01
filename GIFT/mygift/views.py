@@ -16,13 +16,11 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect
 # from .utils import slug2id
 from django.contrib.auth.decorators import login_required
-
 from django.core.files import File 
 from fcm_django.models import FCMDevice
 from push_notifications.models import APNSDevice
 import datetime
 from django.contrib.auth.models import User,Group
-
 
 logger = logging.getLogger('mygift')
 logger.addHandler(logging.NullHandler())
@@ -66,6 +64,7 @@ def loginform(request):
  except Exception as e:
         print(e)
         return render(request,'login.html',{'context1':'User not found' , 'form':form}) 
+
 @login_required(login_url="/mygift/login/")    
 def host(request):
     logger.debug("In Host")
@@ -95,6 +94,7 @@ def host(request):
        
     return render(request,"host.html", {'HostList':HostList,'UserTypeForm':UserTypeForm1},context)
                         
+
 @login_required(login_url="/mygift/login/")
 def challenge(request):
   
@@ -121,10 +121,12 @@ def challenge(request):
           final_queryset.append(k)
     if host_decline_queryset:
         for k in host_decline_queryset:
-          final_queryset.append(k) 
+          final_queryset.append(k)  
+    
     if complete_challenge:
         for k in complete_challenge:
-            final_queryset.append(k) 
+            final_queryset.append(k)
+    
     #usergroup = UserChallengeCategoryLocationRelRel.objects.all().order_by('status','-id')
     #print usergroup
     
@@ -137,21 +139,16 @@ def challenge(request):
        
 def  hostapprove(request):
     logger.debug("In hostapprove")
-    host = request.GET.get('host_id',None)   
+    host = request.GET.get('host_id',None)
+   
     AuthUserGroupsobj = AuthUserGroups.objects.get(id = host,group=Group.objects.get(pk=1))
     userid = AuthUserGroupsobj.user.id
     userobj = UserType.objects.get(user = userid)
-    print("user: ",FCMDevice.objects.filter(user=AuthUserGroupsobj.user.user))
-    mobile_device = FCMDevice.objects.filter(user=AuthUserGroupsobj.user.user)
-    deviceiOS = APNSDevice.objects.filter(user=AuthUserGroupsobj.user.user)
-    print("devices to which notifications is sent: ",mobile_device)
-    message="Dear Host "+ AuthUserGroupsobj.user.user.email+", Congrats.  Welcome to the Gift Platform.  Your request to Host subscription has been approved.  You can create Challenge now onwards "    
-    mobile_device.send_message("Gifter Join Challenge ",message)
-    deviceiOS.send_message(message)
-    NotificationInbox.objects.create(message=message,user=AuthUserGroupsobj.user.user,msg_generated_date=datetime.datetime.now())
-    print("message sent")   
-    userobj.host_permission = "approve"    
+   
+    userobj.host_permission = "approve"
     userobj.save()
+
+
     
 def challengeapprove(request):
     logger.debug("In challengeapprove")
@@ -162,15 +159,6 @@ def challengeapprove(request):
     challengeid = usergroup.challenge.challenge_id
     
     challengeobj = ChallengeType.objects.get(challenge_id = challengeid)
-    print("user: ",FCMDevice.objects.filter(user=usergroup.user.user))
-    mobile_device = FCMDevice.objects.filter(user=usergroup.user.user)
-    deviceiOS = APNSDevice.objects.filter(user=usergroup.user.user)
-    print("devices to which notifications is sent: ",mobile_device)
-    message="Dear "+ usergroup.user.user.email+", Congrats.  Your challenge "+usergroup.challenge.title+", has been approved and available for Gifters to Join"    
-    mobile_device.send_message("Gifter Join Challenge ",message)
-    deviceiOS.send_message(message)
-    NotificationInbox.objects.create(message=message,user=usergroup.user.user,msg_generated_date=datetime.datetime.now())
-    print("message sent")
    
     challengeobj.status = "approve"
     challengeobj.save()
@@ -183,15 +171,7 @@ def hostreject(request):
     AuthUserGroupsobj = AuthUserGroups.objects.get(id = host,group=Group.objects.get(pk=1))
     userid = AuthUserGroupsobj.user.id
     userobj = UserType.objects.get(user = userid)
-    print("user: ",FCMDevice.objects.filter(user=AuthUserGroupsobj.user.user))
-    mobile_device = FCMDevice.objects.filter(user=AuthUserGroupsobj.user.user)
-    deviceiOS = APNSDevice.objects.filter(user=AuthUserGroupsobj.user.user)
-    print("devices to which notifications is sent: ",mobile_device)
-    message="Dear  "+ AuthUserGroupsobj.user.user.email+", Greetings from GIFT Team.  Your request to Host subscription has been declined.  Kindly contact us for further details (Email / Phone) "   
-    mobile_device.send_message("Gifter Join Challenge ",message)
-    deviceiOS.send_message(message)
-    NotificationInbox.objects.create(message=message,user=AuthUserGroupsobj.user.user,msg_generated_date=datetime.datetime.now())
-    print("message sent")   
+   
     userobj.host_permission = "reject"
     userobj.save()
     
@@ -204,15 +184,6 @@ def challengereject(request):
     challengeid = usergroup.challenge.challenge_id
    
     challengeobj = ChallengeType.objects.get(challenge_id = challengeid)
-    print("user: ",FCMDevice.objects.filter(user=usergroup.user.user))
-    mobile_device = FCMDevice.objects.filter(user=usergroup.user.user)
-    deviceiOS = APNSDevice.objects.filter(user=usergroup.user.user)
-    print("devices to which notifications is sent: ",mobile_device)
-    message="Dear "+ usergroup.user.user.email+", we hearby notify you that your challenge "+challengeobj.title+"  has been rejected by the admin team kindly get in touch with admin in case of any query."
-    mobile_device.send_message("Gifter Join Challenge ",message)
-    deviceiOS.send_message(message)
-    NotificationInbox.objects.create(message=message,user=usergroup.user.user,msg_generated_date=datetime.datetime.now())
-    print("message sent")
     #print challengeobj
     challengeobj.status = "reject"
     challengeobj.save()
@@ -298,6 +269,7 @@ def rejectChallenge(request):
 
 
 
+
 def approveChallenge(request):
     logger.debug("In approvechallenge")    
     challenge = request.POST.get('challenge')    
@@ -310,7 +282,7 @@ def approveChallenge(request):
     mobile_device = FCMDevice.objects.filter(user=usergroup.user.user)
     deviceiOS = APNSDevice.objects.filter(user=usergroup.user.user)
     print("devices to which notifications is sent: ",mobile_device)
-    message="Dear Host "+ usergroup.user.user.email+", Congrats.  Your challenge "+usergroup.challenge.title+" ,has been approved and available for Gifters Join "
+    message="Dear Host "+ usergroup.user.user.email+", Congrats.  Your challenge "+usergroup.challenge.title+" ,has been approved and available for Gifters to Join "
     mobile_device.send_message("Gifter Join Challenge ",message)
     deviceiOS.send_message(message)
     AuthUserGroupsobj = AuthUserGroups.objects.filter(pk = usergroup.user.pk,group=Group.objects.get(pk=1))
@@ -352,7 +324,7 @@ def viewhost(request):
         auth.append(model_to_dict(obj))
     host={}
     host['rate']=rating[0].host_rating
-    print("rateimg:-",rating[0].host_rating)
+#    print("rateimg:-",rating[0].host_rating)
     host['auth']=model_to_dict(userobj)
     host['auth1']=authuserobj[0].email
     print("host:-",model_to_dict(userobj))
@@ -361,7 +333,6 @@ def viewhost(request):
     
          
     return JsonResponse(modelDict,safe=False)
-
     
 def rejectHost(request):
     logger.debug("In rejectHost")
@@ -370,9 +341,10 @@ def rejectHost(request):
     #print"in host approve"
     host = request.POST.get('host_id')
     #print "host is.........",host
-#     AuthUserGroupsobj = AuthUserGroups.objects.get(id = host,group=Group.objects.get(pk=1))
+#     AuthUserGroupsobj = AuthUserGroups.objects.get(id = host)
 #     userid = AuthUserGroupsobj.user.id
     userobj = UserType.objects.get(user = host)
+    print("USERobj",userobj)
     #print userobj
     userobj.host_permission = "2"
     userobj.save()
@@ -381,15 +353,15 @@ def rejectHost(request):
     mobile_device = FCMDevice.objects.filter(user=userobj.user)
     deviceiOS = APNSDevice.objects.filter(user=userobj.user)
     print("devices to which notifications is sent: ",mobile_device)
-    message="Dear "+ userobj.user.email+", Greetings from GIFT Team.  Your request to Host subscription has been declined.  Kindly contact us for further details (Email / Phone)"
+    message="Dear Host "+ userobj.user.email+", Greetings from GIFT Team.  Your request to Host subscription has been declined.  Kindly contact us for further details (Email / Phone)"
     mobile_device.send_message("Gifter Join Challenge ",message)
     deviceiOS.send_message(message)
     AuthUserGroupsobj = AuthUserGroups.objects.filter(user = userobj.user,group=Group.objects.get(pk=1))
     print("###########",AuthUserGroupsobj)
     NotificationInbox.objects.create(message=message,user=AuthUserGroupsobj[0],msg_generated_date=datetime.datetime.now())
     print("message sent")
+    
     return redirect('/mygift/host/')
-
     
 def approveHost(request):
     logger.debug("In approveHost")
@@ -403,11 +375,13 @@ def approveHost(request):
     #print userobj
     userobj.host_permission = "3"
     userobj.save()
+    print("In Approve Host")
+     
     print("user: ",FCMDevice.objects.filter(user=userobj.user))
     mobile_device = FCMDevice.objects.filter(user=userobj.user)
     deviceiOS = APNSDevice.objects.filter(user=userobj.user)
     print("devices to which notifications is sent: ",mobile_device)
-    message="Dear "+ userobj.user.email+", Congrats.  Welcome to the Gift Platform.  Your request to Host subscription has been approved.  You can create Challenge now onwards  " 
+    message="Dear Host "+ userobj.user.email+", Congrats.  Welcome to the Gift Platform.  Your request to Host subscription has been approved.  You can create Challenge now onwards  "
     mobile_device.send_message("Gifter Join Challenge ",message)
     deviceiOS.send_message(message)
     AuthUserGroupsobj = AuthUserGroups.objects.filter(user = userobj.user,group=Group.objects.get(pk=1))
@@ -464,15 +438,7 @@ def viewgift(request):
 
     host = request.GET.get('gift_id',None)
 
-    userobj = UserType99.objects.get(user = host)
-    authgroup=AuthUserGroups.objects.filter(user=userobj.user,group=Group.objects.get(pk=2))
-    print("$$$$$$$$$$$$$4",authgroup)
-    rate=[]
-    rating=GifterRating.objects.filter(gift_user=authgroup[0])
-    for aa in rating:
-         rate.append(model_to_dict(aa))       
-    
-    print("Gifter rate:-",rating)
+    userobj = UserType99.objects.get(user = host)   
     #print userobj
     id=userobj.user.id
     #print "id....",id
@@ -486,6 +452,14 @@ def viewgift(request):
     auth.append(model_to_dict(userobj))
     for obj in authuserobj:
         auth.append(model_to_dict(obj))
+    authgroup=AuthUserGroups.objects.filter(user=authuserobj,group=Group.objects.get(pk=2))
+    print("$$$$$$$$$$$$$4",authgroup)
+    rate=[]
+    rating=GifterRating.objects.filter(gift_user=authgroup[0])
+    for aa in rating:
+         rate.append(model_to_dict(aa))
+    print("Gifter rate:-",rating)
+    
                 
     gifter={}
     gifter['rate']=rating[0].gifter_rating
@@ -495,8 +469,7 @@ def viewgift(request):
     print("gifter all:-",  modelDict.append((gifter)))        
     return JsonResponse(modelDict,safe=False)
 
-
-@login_required(login_url="/mygift/login/")
+@login_required(login_url="/mygift/login/")    
 def table_notification(request):
     context = RequestContext(request)   
     query=Notification.objects.all()
@@ -508,6 +481,8 @@ def table_notification(request):
     notificationlist = notificationTable(Notification.objects.all())
     return render(request,"notification_list.html", {'notificationlist':notificationlist,},context)
 
+
+
 def viewnotification(request):
     print("in views nbhghghghgh")
     logger.debug("In viewgift")
@@ -516,8 +491,8 @@ def viewnotification(request):
         host = request.GET.get('notification_id',None)#         
         userobj = Notification.objects.get(id = host)
         modelDict.append(model_to_dict(userobj))
-        return JsonResponse(modelDict,safe=False)  
-	
+        return JsonResponse(modelDict,safe=False)
+
 
 def notification(request):
     query=Notification.objects.all()

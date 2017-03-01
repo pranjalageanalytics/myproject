@@ -19,7 +19,6 @@ print(os.getpid())
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -31,25 +30,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.129']
 
-FCM_DJANGO_SETTINGS = {
-    "FCM_SERVER_KEY": "AIzaSyCFvZu8LoGniFsVPzzxIU8puMrerHhVlOM",
-
-}
-PUSH_NOTIFICATIONS_SETTINGS = {
-    "APNS_CERTIFICATE": os.path.join(BASE_DIR,"static\certificates\Giftcertificate.pem"),
- }
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+   'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'notifications',
+    'push_notifications',
+    'mygift',
+    'table',
     'rest_framework',
-    'rest_framework.authtoken',    
+    'rest_framework.authtoken',
     'django.contrib.sites',
     'rest_auth',
     'djcelery',
@@ -58,8 +54,6 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'gift_app',
     'fcm_django',
-    #'mygift',
-    'table',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
@@ -68,10 +62,18 @@ INSTALLED_APPS = [
     'social.apps.django_app.default',
     'rest_framework_social_oauth2',
     'sorl.thumbnail',
-    'push_notifications',
-    'notifications',
-    'Home'
+    'Home',   
 ]
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AIzaSyCFvZu8LoGniFsVPzzxIU8puMrerHhVlOM",
+
+}
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "APNS_CERTIFICATE": os.path.join(BASE_DIR,"static/certificates/GiftApnsCertificate.pem"),
+ }
+
+
 BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
@@ -87,35 +89,18 @@ MIDDLEWARE_CLASSES  = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 
 ]
 AUNTHETICATION_BACKENDS={
-                        "django.contrib.auth.backends.ModelBackend",
-                        "allauth.account.auth_backends.AuthenticationBackend",
+                        "django.contrib.auth.backends.ModelBackEnd",
+                        "allauth.account.auth.backends.AuthenticationBackend",
                         'rest_framework_social_oauth2.backends.DjangoOAuth2',
                         #'social.backends.facebook.FacebookAppOAuth2',
                         'social.backends.facebook.FacebookOAuth2', 
-                        'social.backends.google.GoogleOAuth2'
-                        'social_auth.backends.facebook.FacebookBackend',  
-                        'oauth2_provider.backends.OAuth2Backend',                     
+                        'social_auth.backends.facebook.FacebookBackend',                       
                         }
 
-"""SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
-)
-"""
 
 #ACCOUNTS_LOGIN_FORM_CLASS=''
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
@@ -129,15 +114,20 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                "django.contrib.auth.context_processors.auth",
-            ]
-        }
-    }
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+            ],
+        },
+    },
 ]
-
 #SOCIAL_AUTH_FACEBOOK_KEY = '160867774371226'
 #SOCIAL_AUTH_FACEBOOK_SECRET = '7a30b71fc01961749dd481af096ea191'
 #LOGIN_REDIRECT_URL='gift/v1/userlocation'
+LOGIN_REDIRECT_URL = "/mygift/login/"
 WSGI_APPLICATION = 'GIFT.wsgi.application'
 
 EMAIL_USE_TLS=True
@@ -149,40 +139,28 @@ EMAIL_HOST_PASSWORD='admin@1991'
 EMAIL_PORT=587
 EMAIL_USE_TLS= True
 
-#GOOGLE_OAUTH2_CLIENT_ID = '697752791370-f5hqqb6uska1hf4isfo91b1rjelocisq.apps.googleusercontent.com'
-#GOOGLE_OAUTH2_CLIENT_SECRET = 'AIzaSyDGGposslVTRToCXnwTo6r76_3a4QUTxXM'
-
-#GOOGLE_OAUTH2_CLIENT_ID = '697752791370-op0lhqjvcg16vf9hrrnrpggpmcak0hoj.apps.googleusercontent.com'
-#GOOGLE_OAUTH2_CLIENT_SECRET = 'AIzaSyDGGposslVTRToCXnwTo6r76_3a4QUTxXM'
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '444053886468-4okt3gtklfbm06g8f3immef8feutag56.apps.googleusercontent.com'
-#GOOGLE_OAUTH2_CLIENT_SECRET = 'qiICQtSUgBtcViAMg3RhM6-m'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'AIzaSyBholLm7XgtTjEK2MHhVjk7OD1Qxd9Ab2o'
 
 FACEBOOK_APP_ID='1708603212787130'
 FACEBOOK_API_SECRET='91a5f477e6942ba3dc3327d018ce7918'
+
+GOOGLE_OAUTH2_CLIENT_ID = '697752791370-f5hqqb6uska1hf4isfo91b1rjelocisq.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'AIzaSyDGGposslVTRToCXnwTo6r76_3a4QUTxXM'
+
+
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rohini_gift',
+        'NAME': 'gift',
         'USER':'root',
         'PASSWORD':'wAst8Buc',
         'HOST': 'localhost',
         'PORT':'3306'
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -205,13 +183,10 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     
-   
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-
-    
    
 }
 REST_AUTH_SERIALIZERS = {
@@ -238,16 +213,12 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-#STATIC_URL = '/static/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
 )
-STATIC_URL = '/static/'

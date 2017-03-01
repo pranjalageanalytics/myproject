@@ -1,15 +1,6 @@
 
 $(document).ready(function(){
 	$("#host_update").click(function(){
-		
-		var datevalue = document.getElementById('datepicker').value
-    	//alert("date value is -- " + datevalue);
-    	
-    	
-    	
-    	var contactvalue = document.getElementById("contact").value
-    	//alert("contact value is -- " + contactvalue);
-    	
 		flag = true;
 		
 		if($('input[name=gender]:checked').length<=0)
@@ -21,7 +12,7 @@ $(document).ready(function(){
         }
 		
 		
-		if(datevalue=="") {
+		if(datepicker.value=="") {
   			$("#dob_error").show();
   			
   			   document.getElementById('dob_error').innerHTML=" This field is required!";
@@ -30,9 +21,9 @@ $(document).ready(function(){
   			   flag=false;
 		}
 		
-		else if(datevalue!=""){ 
+		else if(datepicker.value!=""){ 
 		
-			if(datevalue.length!=10)
+			if(datepicker.value.length!=10)
           {
           //alert("in length");
           $("#dob_error").show();
@@ -53,7 +44,7 @@ $(document).ready(function(){
           
 	
           
-        	  if(contactvalue==""){
+        	  if(contact.value==""){
         			$("#error2").show();
         			//alert("in contact")
         			   document.getElementById('error2').innerHTML=" This field is required!";
@@ -71,8 +62,8 @@ $(document).ready(function(){
                   }
         	  
         	  var re =/^[- +()]*[0-9][- +()0-9]*$/
-        	  if(contactvalue!=""){
-                  if(!re.test(contactvalue)) {
+        	  if(contact.value!=""){
+                  if(!re.test(contact.value)) {
                  
                    $("#error2").show();
                  document.getElementById('error2').innerHTML="Contact number contains only digits";
@@ -81,7 +72,7 @@ $(document).ready(function(){
                 	//alert("in email if "+flag);
                  
                       }
-                  if(contactvalue.length!=12)
+                  if(contact.value.length!=12)
                   {
                       //alert("in length");
                       $("#error2").show();
@@ -95,6 +86,8 @@ $(document).ready(function(){
       		    
                  
          // alert(flag);
+          $('#profile_pic').submit();
+
           return flag;
           
 	});

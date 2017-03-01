@@ -2,13 +2,13 @@
 
 {%block styleBlock%}
 <style type="text/css">
-
 .main-footer {
     background: #fff;
     padding: 3px !important;
     color: #444;
     border-top: 1px solid #d2d6de;
 }
+
 a:focus {
     outline: 0px auto -webkit-focus-ring-color  !important;
     outline-offset: -2px;
@@ -144,12 +144,15 @@ label {
 				/*alert("2nd if");*/
 				$(t.rows[i].cells[j]).text("rejected");
 
-			}
-			else if(val == "complete") {
+			} 
+
+                        else if(val == "complete") {
 				/*alert("2nd if");*/
 				$(t.rows[i].cells[j]).text("complete");
 
-			} 
+			}
+
+
 			else{
 				$(t.rows[i].cells[j]).text("pending");
 				
@@ -192,15 +195,14 @@ label {
 		                    console.log(data[j].user) 
 		  */
 		 
-		 /* if(val == data[j].user)
+		 if(val == data[j].user)
 			 {
 			 
 			 console.log("in if")
 			 $(t.rows[i].cells[k]).text(data[j].organization)
 			 console.log(data[j].organization)
 			 
-			 }
-                          */  
+			 } 
 			 
 			}
 					 
@@ -691,9 +693,9 @@ $(".fa").on("click", function() {
 										; value="Update"> -->
 
 									<a data-dismiss="modal" data-toggle="modal" href="#rejectchallenge"><input
-                                                                       type="button" class="btn btn-danger" ; style="width: 85px; margin-left: 10px;" value="Reject"></a>
-          								<button type="button" class="btn btn-info" onclick="ref()"
-         								 ; id="idClose" data-dismiss="modal" style="width: 85px;margin-left: 1%;">Close</button>
+          type="button" class="btn btn-danger" ; style="width: 85px; margin-left: 10px;" value="Reject"></a>
+         <button type="button" class="btn btn-info" onclick="ref()"
+          ; id="idClose" data-dismiss="modal" style="width: 85px;margin-left: 1%;">Close</button>
 
 								</div>
 							</div>

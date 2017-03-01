@@ -3,7 +3,7 @@ $('.ckeckm').change(function() {
 		  //$("#menu1").css("background","light");
 		  		  
 		  $("#menu1").css("background","white");
-		  $("div.select1").replaceWith("Category Selected");
+		  $("div.select1").replaceWith("Category selected");
 		 
 		  console.log("sss");
 		    });
@@ -104,18 +104,17 @@ $('.ckeckm').change(function() {
                         document.getElementById("title").style.borderColor = "#ccc";
                       }
 		
-		if(requested_volunteers=="")
-		{
+		if(requested_volunteers==""){
 			         
-               $("#errorvolunteer").show();
+                            $("#errorvolunteer").show();
 			
 			   document.getElementById('errorvolunteer').innerHTML=" This field is required!";
-		       document.getElementById("requested_volunteers").style.borderColor = "#E34234";
+		           document.getElementById("requested_volunteers").style.borderColor = "#E34234";
 
 			   flag=false;
 			   
-		}
-	     
+			  }
+		
 		else{
                         //flag=true;
  			//alert("else of email")
@@ -123,7 +122,8 @@ $('.ckeckm').change(function() {
             
               document.getElementById("requested_volunteers").style.borderColor = "#ccc";
             }
-		 var re =/^[0-9]*$/;
+
+               var re =/^[0-9]*$/;
    	     if(requested_volunteers!=""){
              if(!re.test(requested_volunteers)) {
             
@@ -135,7 +135,8 @@ $('.ckeckm').change(function() {
             
                  }
    	      }
-		
+
+
 		var d=new Date();
 		var today = (d.getFullYear()+"-"+((d.getMonth()<10)?"0"+(d.getMonth()+1):(d.getMonth()+1))+"-"+((d.getDate()<10)?"0"+d.getDate():d.getDate()));
 		console.log("today : ",today)
@@ -159,7 +160,7 @@ $('.ckeckm').change(function() {
 			   //flag=true;
 			   $("#errorstart").hide();
 	            
-	           document.getElementById("start_date").style.borderColor = "#ccc"; 
+	              document.getElementById("start_date").style.borderColor = "#ccc"; 
 			}
 		
 		
@@ -190,7 +191,7 @@ $('.ckeckm').change(function() {
 		else if(date2<date1){
 			 //alert("exp date less than start date");
 			    $("#errorend").show();
-			    document.getElementById('errorend').innerHTML=" To date can't be less than start date!";
+			    document.getElementById('errorend').innerHTML=" To date can't be less  than start date!";
 			    document.getElementById("end_date").style.borderColor = "#E34234";
 			     flag=false;
 			    }
@@ -226,7 +227,7 @@ $('.ckeckm').change(function() {
 		 else if(Date.parse(date3)<Date.parse(today)){
 			// alert("exp date less than start date");
 			    $("#errorexp").show();
-			    document.getElementById('errorexp').innerHTML=" Exp date can't be less than today date!";
+			    document.getElementById('errorexp').innerHTML=" Exp date can't be less  than today date!";
 			    document.getElementById("exp_date").style.borderColor = "#E34234";
 			     flag=false;
 			    }
@@ -295,8 +296,8 @@ $('.ckeckm').change(function() {
 	
 	
 	
-	allValues=[];
-	allValues1=[];
+	allValues=[]
+	allValues1=[]
 	//$("#sub").click(function(e){
 		//alert('within form submit');
 		//allValues=[]
@@ -307,13 +308,13 @@ $('.ckeckm').change(function() {
 	            if(checkboxes[i].checked==true)
 	            	{
 	            		console.log('k',checkboxes[i].value);
-	            		allValues.push(checkboxes[i].value);
+	            		allValues.push(checkboxes[i].value)
 	            		
 	            	}
 	        }	
 		//var state = $("#iframe").contents().find(":checkbox").is(":checked");
 	     
-	     console.log('checkboxes',allValues);
+	     console.log('checkboxes',allValues)
 	     
 	     if(allValues.length==0)
 	    	 {
@@ -343,7 +344,7 @@ $('.ckeckm').change(function() {
 	            if(checkboxes1[i].checked==true)
 	            	{
 	            		console.log('k',checkboxes1[i].value);
-	            		allValues1.push(checkboxes1[i].value);
+	            		allValues1.push(checkboxes1[i].value)
 	            		
 	            	}
 	        }
@@ -366,7 +367,7 @@ $('.ckeckm').change(function() {
 	    	 }
 		//var state = $("#iframe").contents().find(":checkbox").is(":checked");
 	     
-	     console.log('checkboxes',allValues1);
+	     console.log('checkboxes',allValues1)
 	   
 	     var title=$("#title").val();
 	     //console.log(title);
@@ -415,22 +416,22 @@ $('.ckeckm').change(function() {
 	     .done(function(data) {
              console.log("within sucess");
              $.each(data,function(key ,value){
-                   console.log(value);
+                   console.log(value)
                    if(value=='error')
                     {
                      console.log('eroor has occured');
-                     window.location.href="http://192.168.1.129:8063/home/pagenotfound/";
+                     window.location.href="http://192.168.1.129:8043/home/pagenotfound/"
                     }
                    if(value=='success')
                     {
-                      	$('#picture_form').submit();
+		    $('#picture_form').submit();
                     console.log('success');
-                    //window.location.href="http://192.168.1.129:8063/home/host_challenges/";
+                   // window.location.href="http://192.168.1.129:8043/home/host_challenges/"
                     }
              });
              
              
-        });
+        })
 	 
           }
        

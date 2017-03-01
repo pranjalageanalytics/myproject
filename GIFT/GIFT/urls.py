@@ -20,8 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from gift_app.views import *
-import notifications.urls
 import mygift.urls
+import notifications.urls
 import Home.urls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -30,14 +30,12 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     #url(r'^', include('django.contrib.auth.urls')),
     url(r'^gift/v1/', include('gift_app.urls')),
-    url(r'^mygift/', include(mygift.urls, namespace='mygift')),
-    #url(r'^mygift/', include('mygift.urls', namespace='mygift')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     #url(r'^mygift/', include(mygift.urls, namespace='mygift')),
-     #url(r'^gifter/$', GifterAcceptance.as_view()), 
+     #url(r'^gifter/$', GifterAcceptance.as_view()),  
+    url(r'^mygift/', include(mygift.urls, namespace='mygift')),
     url(r'^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     url(r'^home/', include(Home.urls, namespace='home')),
- 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

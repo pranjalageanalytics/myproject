@@ -49,7 +49,7 @@ $(document).on('click', '.infobtn1', function(){
 			alert("hid_val"+$(this).val())
 			var accp_id=$(this).val();
 			
-			$('.iframe_loc').attr('src', "http://192.168.1.129:8063/home/getchallengecompletedlist/"+accp_id); 
+			$('.iframe_loc').attr('src', "http://192.168.1.129:8043/home/getchallengecompletedlist/"+accp_id); 
 		}
     });
 	
@@ -266,9 +266,6 @@ function myFunction() {
 </h4></div>
 <div style="padding-left: 40px;"><h4><b>Venue:&nbsp;</b>{{obj.challenge.venue}}</h4></div>
 <div style="padding-left: 40px;"><h4><b>Contact:&nbsp;</b>{{obj.challenge.contact_no}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Description:&nbsp;</b>{{obj.challenge.description}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Direction:&nbsp;</b>{{obj.challenge.direction}}</h4></div>
-
 {% for key, value in obj.user.items %}
 <div style="padding-left: 40px;"><h4><b>Email:&nbsp;</b>{{value.email}}</h4></div>
 {% endfor %}

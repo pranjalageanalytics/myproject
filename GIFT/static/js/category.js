@@ -42,17 +42,17 @@ console.log("in category js");
 	       //alert("for save");
 		 $('#category-form').submit()
 		 //alert("after save");
-		 window.location.href="http://192.168.1.129:8063/home/challenge/"
+		 window.location.href="http://192.168.1.129:8043/home/challenge/"
      }
    
    else
    {
     var a = document.getElementById("demo1");
 	   a.style.cssText= 'font-size: 20px; cursor: pointer; text-align:center;color:red;';
-	   a.innerHTML = 'Please selected atleast one category';
+	   a.innerHTML = 'Please select atleast one category';
 	   $("#demo1").show(); 
        
-      // alert("Please Select Atleast One Category")
+      // alert("Please Selected Atleast One Category")
        
      
     }

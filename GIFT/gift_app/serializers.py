@@ -7,10 +7,9 @@ from django.core.validators import RegexValidator
 from json import loads, dumps
 from django.db.models import F
 import datetime
-from .models import LocationType,CategoryType,ChallengeType,UserChallengeCategoryLocationRelRel,StatusType,\
-UserCategoryRel,UserLocationRel,MyChallengeRelRel,StatusType,GiftergoalType,UserType,AuthUserGroups,UserChallengeCategoryLocationRelRelCategory,\
-UserChallengeCategoryLocationRelRelLocation,HostFeedback,GifterFeedback,GifterRanking,HostRanking,HostRating,NotificationInbox,GifterRating,\
-GifterRating,Reward
+from .models import LocationType,CategoryType,CategoryLocationRel,ChallengeType,UserChallengeCategoryLocationRelRel,StatusType,\
+HostUserType,UserCategoryRel,GiftUserType,UserLocationRel,MyChallengeRelRel,StatusType,GiftergoalType,UserType,AuthUserGroups,UserChallengeCategoryLocationRelRelCategory,\
+UserChallengeCategoryLocationRelRelLocation,HostFeedback,GifterFeedback,GifterRanking,HostRanking,NotificationInbox,HostRating,GifterRating,Reward
 #from rest_auth.serializers import AuthGroupSerializer
 from rest_auth.serializers import UserSerializer
 from django.contrib.auth import get_user_model
@@ -24,6 +23,11 @@ from notifications.signals import notify
 from django.conf import settings
 get_media=settings.MEDIA_ROOT
 
+class RewardSerializer(serializers.ModelSerializer):
+    user=serializers.CharField(source='user.user')
+    class Meta:
+        model=Reward
+        fields=('user','rewards_point',)
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,11 +45,42 @@ class CategoryTypeSerializer(serializers.HyperlinkedModelSerializer):
         model = CategoryType
         fields = ('category_id','category_name','category_image')
          
-        
-#^[0-9\-\+]{9,15}$----->works for 0771234567 and +0771234567
+         
+class CategoryLocationListSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source='category.category_name')
+    location=serializers.CharField(source='location.city')
+    class Meta:
+        model=CategoryLocationRel
+        fields=('category','location')
+         
+         
+class CategoryLocationSerializer(serializers.ModelSerializer):
+    #location=LocationSerializer()
+    class Meta:
+        model=CategoryLocationRel
+        fields=('category','location')
+ 
 class PhoneNumberValidator(RegexValidator):
     regex = r'^[0-9\-\+]+$'
     message = 'Invalid Phone Number'
+
+
+
+
+class HostRatingSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model=HostRating
+        fields=('host_rating', )
+        
+class GifterRatingSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model=GifterRating
+        fields=('gifter_rating', ) 
+
+
+
+
+
          
 class ChallengeSerializer(serializers.ModelSerializer):
     contact_no = serializers.CharField(
@@ -58,7 +93,12 @@ class ChallengeSerializer(serializers.ModelSerializer):
             "max_length": "phone number should be 12 digit long",
         },validators=[PhoneNumberValidator()]
     )
+    #photo= serializers.CharField(required=False,max_length=10000)
+    #     max_length=None, use_url=True, ) 
+    #commited_volunteers= serializers.RegexField(regex=r'^[0-9]+$', required=True, error_messages= {"invalid" : 'Please Enter No Only'})
     requested_volunteers= serializers.RegexField(regex=r'^[0-9]+$', required=False, error_messages= {"invalid" : 'Please Enter No Only'})
+    #decline_volunteers= serializers.RegexField(regex=r'^[0-9]+$', required=True, error_messages= {"invalid" : 'Please Enter No Only'})
+    #tentative_volunteers= serializers.RegexField(regex=r'^[0-9]+$', required=True, error_messages= {"invalid" : 'Please Enter No Only'})
      
     class Meta:
         model=ChallengeType
@@ -87,7 +127,33 @@ class UserCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserCategoryRel
         fields=('pk','category',)     
-    
+    """def __init__(self, *args, **kwargs):
+        super(UserCategoryCreateSerializer, self).__init__(*args, **kwargs)
+        CATEGORY_CHOICES = []
+        for c in CategoryType.objects.all():
+            CATEGORY_CHOICES.append((c.pk, c.category_name))
+        self.fields['category'] = serializers.MultipleChoiceField(choices=CATEGORY_CHOICES, allow_blank=False)"""
+         
+    """def create(self,validated_data):
+        request = self.context.get("request")
+        user= request.user    
+        print user.pk
+        gifter_user= GiftUserType.objects.filter(user= user.pk)        
+        tracks_data = validated_data.pop('category')
+         
+        print 'tracks_data : ',tracks_data 
+        list=[]
+        for track_data in tracks_data:
+            queryset=UserCategoryRel.objects.filter(user=gifter_user[0],category=track_data)
+            if not queryset: 
+                validated_data['user']=gifter_user[0]
+                #c=CategoryType.objects.get(pk=track_data)
+                user_category= UserCategoryRel.objects.create(user=gifter_user[0],category=track_data)
+                list.append(user_category)
+             
+        msg = _('Data saved')
+        raise exceptions.ValidationError(msg)
+        #return UserCategoryRel.objects.all()"""
      
 class UserCategoryUpdateSerializer(serializers.ModelSerializer):
     category=serializers.MultipleChoiceField(choices=CategoryType.objects.all())
@@ -116,6 +182,33 @@ class UserLocationCreateSerializer(serializers.ModelSerializer):
         model=UserLocationRel
         fields=('location','user')     
  
+    """def create(self,validated_data):
+        request = self.context.get("request")
+        user= request.user    
+        print user.pk
+        gifter_user= GiftUserType.objects.filter(user= user.pk)
+        print('location : ',validated_data.get('location'))
+        queryset=UserLocationRel.objects.filter(user=gifter_user[0],location=validated_data.get('location'))
+        if not queryset: 
+            validated_data['user']=gifter_user[0]
+            user_location= UserLocationRel.objects.create(**validated_data)
+            return user_location
+        else:
+            location=UserLocationRel.objects.filter(user=gifter_user[0])
+            return location[0]
+     
+    def update(self, instance, validated_data):      
+        instance.user = validated_data.get('user', instance.user)
+        instance.location = validated_data.get('location', instance.location)        
+        instance.save()
+        return instance"""
+
+class GetGoalPercentageSerializer(serializers.ModelSerializer):
+    completed_hours=serializers.IntegerField()
+    completed_tasks=serializers.IntegerField()
+    class Meta:
+        model=GiftergoalType
+        fields=('pk','goal_hours','goal_tasks','completed_hours','completed_tasks')
      
 class GetGoalSerializer(serializers.ModelSerializer):
     class Meta:
@@ -123,13 +216,7 @@ class GetGoalSerializer(serializers.ModelSerializer):
         #fields=('pk','goal_start_date','goal_end_date','goal_hours','goal_tasks','completed_hours','completed_tasks')
         fields=('pk','goal_hours','goal_tasks','completed_hours','completed_tasks')
  
-class GetGoalPercentageSerializer(serializers.ModelSerializer):
-    completed_hours=serializers.IntegerField()
-    completed_tasks=serializers.IntegerField()
-    class Meta:
-        model=GiftergoalType
-        fields=('pk','goal_hours','goal_tasks','completed_hours','completed_tasks')
-
+ 
 class GoalSerializer(serializers.ModelSerializer):
     completed_hours=serializers.DecimalField(max_digits=4, decimal_places=2)
     completed_tasks=serializers.DecimalField(max_digits=4, decimal_places=2)
@@ -141,9 +228,8 @@ class GoalSerializer(serializers.ModelSerializer):
 class UpdateGoalSerializer(serializers.ModelSerializer): 
     class Meta:
         model=GiftergoalType
-        # fields=('goal_start_date','goal_end_date','goal_hours','goal_tasks')    
+       # fields=('goal_start_date','goal_end_date','goal_hours','goal_tasks')    
         fields=('goal_hours','goal_tasks')
-    
     def update(self, instance, validated_data):      
         #instance.goal_start_date = validated_data.get('goal_start_date', instance.goal_start_date)
         #instance.goal_end_date = validated_data.get('goal_end_date', instance.goal_end_date)
@@ -224,22 +310,14 @@ class AuthGroupSerializer(serializers.ModelSerializer):
 class ChallengeListSerializer (serializers.ModelSerializer):
     class Meta:
         model=ChallengeType
-        fields=('title','start_date','end_date','reg_expire_date','start_time','end_time','description',
+        fields=('title','photo','start_date','end_date','reg_expire_date','start_time','end_time','description',
                 'requested_volunteers','contact_no','venue','direction','accepted_volenteers_by_host','declined_volenteers_by_host',
                 'commited_volunteers','decline_volunteers','tentative_volunteers')
          
-class HostRatingSerializer(serializers.ModelSerializer): 
-    class Meta:
-        model=HostRating
-        fields=('host_rating', )
-        
-class GifterRatingSerializer(serializers.ModelSerializer): 
-    class Meta:
-        model=GifterRating
-        fields=('gifter_rating', ) 
-             
+         
 class UserChallengeCategoryLocationListSerializer(serializers.ModelSerializer):
     user=AuthGroupSerializer()
+    #category_location=CategoryLocationListSerializer()
     categorytype = serializers.StringRelatedField(many=True)
     locationtype = serializers.StringRelatedField(many=True)
     challenge=ChallengeListSerializer()
@@ -247,7 +325,19 @@ class UserChallengeCategoryLocationListSerializer(serializers.ModelSerializer):
     host_rating=HostRatingSerializer()
     class Meta :
         model=UserChallengeCategoryLocationRelRel
-        fields=('pk','user','categorytype','locationtype','challenge','status','photo','host_rating')
+        fields=('pk','user','categorytype','locationtype','challenge','status','photo','host_rating')      
+ 
+class CategoryLocationM2MSerializer(serializers.HyperlinkedModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=CategoryType.objects.all(),many=True)
+    location = serializers.PrimaryKeyRelatedField(queryset=LocationType.objects.all(),many=True) 
+    class Meta:
+        model=CategoryLocationRel
+        fields=('category','location')    
+"""class UserChallengeCategoryLocationRelRel(serializers.HyperlinkedModelSerializer):
+    challenge=ChallengeSerializer()
+    class Meta:
+        model=UserChallengeCategoryLocationRelRel
+        fields=('category_location','challenge')"""
             
 class UserChallengeCategoryLocationRelRelSerializer(serializers.HyperlinkedModelSerializer):    
     #category_location=CategoryLocationM2MSerializer()
@@ -305,38 +395,23 @@ class UserChallengeCategoryLocationRelRelSerializer(serializers.HyperlinkedModel
                         
                         obj=User.objects.all()
                         admin_user=User.objects.filter(email='admin@gmail.com')
+                        """for k in obj:
+                            if k.is_superuser == True:
+                                admin_user=k"""
                         msg='New Challenge appeared from Host '+authuser[0].user.email+' for Approval'
                         notify.send(authuser[0].user, recipient=admin_user[0], verb=msg)
-                        """rating=1.0
-                        total_sum=0
-                        hostfeedback=HostFeedback.objects.filter(host_user=authuser[0])
-                        if hostfeedback:
-                            cnt=hostfeedback.count()
-                            total_count=int(cnt*5)
-                            print "total_count : ",total_count
-                            for h in hostfeedback:
-                                total_sum=int(total_sum+h.point)
-                            print "total_sum : ",total_sum
-                            div=float(total_sum/total_count)
-                            print div
-                            rating=(total_sum/total_count)*5
-                        host_rating=UserChallengeCategoryLocationRelRel.objects.filter(user=authuser[0])
-                        #for h in host_rating:
-                        host_rating.update(host_rating=rating)"""
                         return UserChallengeCategoryLocationRel
                         #return None
                 else:
                         msg = _('Invalid User')
                         raise exceptions.ValidationError(msg)
-            elif usertype[0].host_permission=='2':
-                msg = _('Host Rejected')
-                raise exceptions.ValidationError(msg)
             else:
                 msg = _('Permission Denied')
                 raise exceptions.ValidationError(msg)
         else:
             msg = _('Invalid User')
             raise exceptions.ValidationError(msg)
+
         
 class ChallengeImageSerializer(serializers.ModelSerializer):
      
@@ -351,13 +426,8 @@ class UpdateChallengeImageSerializer(serializers.ModelSerializer):
             fields=('photo',)
          
     def update(self, instance, validated_data):
-            print("hiii  ",validated_data.get('photo'))
-            #userchallenge=UserChallengeCategoryLocationRelRel.objects.get(pk=instance.pk)
-            instance.photo=validated_data.get('photo', instance.photo) #challenge_data.get('photo',challenge.photo)
-            instance.save()
-            return instance
- 
-             
+           instance.photo=validated_data.get('photo', instance.photo)
+           instance.save()            
  
    
 class UserChallengeCategoryLocation_RetriveUpdateSerializer(serializers.ModelSerializer):
@@ -386,7 +456,7 @@ class UserChallengeCategoryLocation_RetriveUpdateSerializer(serializers.ModelSer
             challenge_data=validated_data.pop('challenge')
             challenge=instance.challenge
             challenge.title=challenge_data.get('title',challenge.title)
-            #challenge.photo=challenge_data.get('photo',challenge.photo)
+            challenge.photo=challenge_data.get('photo',challenge.photo)
             challenge.start_date=challenge_data.get('start_date',challenge.start_date)
             challenge.end_date=challenge_data.get('end_date',challenge.end_date)
             challenge.start_time=challenge_data.get('start_time',challenge.start_time)
@@ -395,7 +465,6 @@ class UserChallengeCategoryLocation_RetriveUpdateSerializer(serializers.ModelSer
             challenge.contact_no=challenge_data.get('contact_no',challenge.contact_no)
             challenge.description=challenge_data.get('description',challenge.description)
             challenge.reg_expire_date=challenge_data.get('reg_expire_date',challenge.reg_expire_date)
-            challenge.direction=challenge_data.get('direction',challenge.direction)
             #instance.status=StatusType.objects.get(status='pending')
             instance.save()
             challenge.requested_volunteers=challenge_data.get('requested_volunteers',challenge.requested_volunteers)
@@ -415,7 +484,7 @@ class UserChallengeCategoryLocation_RetriveUpdateSerializer(serializers.ModelSer
                     device = FCMDevice.objects.filter(user=myc.user.user)
                     deviceiOS = APNSDevice.objects.filter(user=myc.user.user)
                     #print("devices to which notifications is sent: ",device)
-                    message="Dear Gifter "+str(myc.user.user.email)+", your challenge "+ str(challenge) +" has been updated.  Kindly check challenge details. "
+                    message="Dear Gifter "+str(myc.user.user.email)+", your challenge "+ str(challenge.title) +" has been updated.  Kindly check challenge details. "
                     device.send_message("Challenge Update",message)
                     deviceiOS.send_message(message)
                     NotificationInbox.objects.create(message=message,user=myc.user,msg_generated_date=datetime.datetime.now())
@@ -441,15 +510,16 @@ class CreateMyChallengeSerializer(serializers.ModelSerializer):
          
     def create(self,validated_data):
         request = self.context["request"]
-        group_id = self.context["group_id"]   
+        group_id = self.context["group_id"]     
         #print "group_id :" ,group_id
         if group_id=='2':
-            
+            #user= request.user    
+            #print user.pk
             authuser=[]
-            usertype= User.objects.filter(pk= request)
-            print "usertype ",usertype
+            usertype= UserType.objects.filter(user= request)
+            print usertype
             if usertype:
-                authuser=AuthUserGroups.objects.filter(user=usertype[0],group=Group.objects.get(pk=2))
+                authuser=AuthUserGroups.objects.filter(user=usertype[0].user,group=Group.objects.get(pk=2))
             else:
                 msg = _('Invalid User')
                 raise exceptions.ValidationError(msg)
@@ -498,7 +568,7 @@ class CreateMyChallengeSerializer(serializers.ModelSerializer):
                                     mobile_device = FCMDevice.objects.filter(user=challenge[0].user.user)
                                     deviceiOS = APNSDevice.objects.filter(user=challenge[0].user.user)
                                     print("devices to which notifications is sent: ",mobile_device)
-                                    message="Dear Host "+ challenge[0].user.user.email+", Gifter "+ authuser[0].user.email+" is interested to join the challenge "+challenge[0].challenge.title
+                                    message="Dear "+ challenge[0].user.user.email+", "+ authuser[0].user.email+" is interested to join the challenge "+challenge[0].challenge.title
                                     mobile_device.send_message("Gifter Join Challenge ",message)
                                     deviceiOS.send_message(message)
                                     NotificationInbox.objects.create(message=message,user=challenge[0].user,msg_generated_date=datetime.datetime.now())
@@ -546,7 +616,7 @@ class CreateMyChallengeSerializer(serializers.ModelSerializer):
                                     mobile_device = FCMDevice.objects.filter(user=userchallenge.user.user)
                                     deviceiOS = APNSDevice.objects.filter(user=userchallenge.user.user)
                                     print("devices to which notifications is sent: ",mobile_device)
-                                    message="Dear Host "+ userchallenge.user.user.email+", Gifter "+ myc.user.user.email+" is interested to join the challenge "+userchallenge.challenge.title
+                                    message="Dear "+ userchallenge.user.user.email+", "+ myc.user.user.email+" is interested to join the challenge "+userchallenge.challenge.title
                                     print message 
                                     mobile_device.send_message("Gifter Join Challenge ",message)
                                     deviceiOS.send_message(message)
@@ -571,8 +641,7 @@ class CreateMyChallengeSerializer(serializers.ModelSerializer):
                 raise exceptions.ValidationError(msg)
         else:
             msg = _('Invalid User')
-            raise exceptions.ValidationError(msg)
- 
+            raise exceptions.ValidationError(msg) 
  
  
 class MyChallengeListSerializer(serializers.ModelSerializer):
@@ -616,6 +685,8 @@ class GifterAcceptanceSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         request = self.context["request"]        
         gifter = MyChallengeRelRel.objects.get(pk=self.context["gifter"])
+        #user= request.user    
+        #print "email: ",user.email     
         status=  validated_data.get('status', instance.status)     
         instance.status =   status   
         instance.save()
@@ -624,6 +695,7 @@ class GifterAcceptanceSerializer(serializers.ModelSerializer):
         userchallenge=UserChallengeCategoryLocationRelRel.objects.get(pk=instance.user_challenge_category_location.pk)
         c=ChallengeType.objects.filter(pk=userchallenge.challenge.pk)
         print c[0].title
+        print userchallenge.user.user.email
         if status.pk==3:    
             print "within if : ",status.pk            
             c.update(declined_volenteers_by_host=F("declined_volenteers_by_host") + 1)
@@ -632,9 +704,8 @@ class GifterAcceptanceSerializer(serializers.ModelSerializer):
                 print("user: ",FCMDevice.objects.filter(user=gifter.user.user))
                 device = FCMDevice.objects.filter(user=gifter.user.user)
                 deviceiOS = APNSDevice.objects.filter(user=gifter.user.user)
-                print ("deviceiOS ",deviceiOS)
-                print("devices to which notifications is sent: ",deviceiOS)
-                message="Dear Gifter "+str(gifter.user.user.email)+",  We regret to inform you that your request for joining the challenge "+ str(c[0].title) +" has been declined.  Kindly contact us on "+ str(userchallenge.user.user.email)  +" for futher details"
+                print("devices to which notifications is sent: ",device)
+                message="Dear "+str(gifter.user.user.email)+",  We regret to inform you that your request for joining the challenge "+ str(c[0].title) +" has been declined.  Kindly contact us on "+ str(userchallenge.user.user.email)  +" for futher details"
                 device.send_message("Gifter Decline",message)
                 deviceiOS.send_message(message)
                 NotificationInbox.objects.create(message=message,user=gifter.user,msg_generated_date=datetime.datetime.now())
@@ -649,8 +720,8 @@ class GifterAcceptanceSerializer(serializers.ModelSerializer):
                 print("user: ",FCMDevice.objects.filter(user=gifter.user.user))
                 device = FCMDevice.objects.filter(user=gifter.user.user)
                 deviceiOS = APNSDevice.objects.filter(user=gifter.user.user)
-                print("devices to which notifications is sent: ",deviceiOS)
-                message="Dear Gifter "+ str(gifter.user.user.email) +", Congrats!!  We welcome you to paricipate in the Challenge "+str(c[0].title) +" and make it a success"
+                print("devices to which notifications is sent: ",device)
+                message="Dear "+ str(gifter.user.user.email) +", Congrats!!  We welcome you to paricipate in the Challenge "+str(c[0].title) +" and make it a success"
                 device.send_message("Gifter Approval",message)
                 deviceiOS.send_message(message)
                 NotificationInbox.objects.create(message=message,user=gifter.user,msg_generated_date=datetime.datetime.now())
@@ -726,10 +797,10 @@ class MakeMyFavouriteMyChallengeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context["request"]
         group_id = self.context["group_id"]   
-        print "MakeMyFavouriteMyChallengeSerializer :  ",self.context["challenge_id"]
+        #print self.request.user
         if group_id=='2':
-            user= request   
-            print user
+            #user= request.user    
+            #print user.pk
             authuser=[]
             usertype= UserType.objects.filter(user= request)
             if usertype:
@@ -758,8 +829,7 @@ class MakeMyFavouriteMyChallengeSerializer(serializers.ModelSerializer):
         else:
             msg = _('Invalid User')
             raise exceptions.ValidationError(msg)
-    
-     
+
 class MyChallengeSerializer(serializers.ModelSerializer):
     challenge=serializers.CharField(source='user_challenge_category_location.challenge.title')
     user=serializers.CharField(source='user.user')
@@ -773,13 +843,14 @@ class UserCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=UserCategoryRel
         fields=('user','category')
-        
+
 class HostFeedbackSerializer(serializers.ModelSerializer):
     def create(self, validated_data):                 
         request=self.context["request"]
         challenge=UserChallengeCategoryLocationRelRel.objects.filter(pk=self.context["challenge_id"])
         authuser=AuthUserGroups.objects.filter(user=User.objects.get(pk=request),group=Group.objects.get(pk=2))
         user=User.objects.filter(pk=request)
+
         if authuser:
             mychallenge= MyChallengeRelRel.objects.filter(user_challenge_category_location=challenge[0],user=authuser[0],status=StatusType.objects.get(status='complete'))
             if mychallenge:               
@@ -803,6 +874,7 @@ class HostFeedbackSerializer(serializers.ModelSerializer):
                             print div
                             rating=(total_sum/total_count)*5
                     host_rating=HostRating.objects.filter(user=challenge[0].user)
+                        #for h in host_rating:
                     host_rating.update(host_rating=rating)
                     return host_feedback
                 else:
@@ -819,7 +891,7 @@ class HostFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model=HostFeedback
         fields=('point',)
-        
+
 class GifterFeedbackSerializer(serializers.ModelSerializer):    
     def create(self, validated_data):
         gifter=self.context["gifter"]
@@ -867,29 +939,22 @@ class GifterFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model=GifterFeedback
         fields=('point',)
-        
-class GifterRankingSerializer(serializers.ModelSerializer):
-    gift_user=serializers.CharField(source='gift_user.user')
-    class Meta:
-        model=GifterRanking
-        fields=('gift_user','gifter_point')
-        
+
 class HostRankingSerializer(serializers.ModelSerializer):
     user=serializers.CharField(source='user.user')
     class Meta:
         model=HostRanking
         fields=('user','host_point')
 
-        
+
 class NotificationSerializer(serializers.ModelSerializer):
     #user=serializers.CharField(source='user.email')
     class Meta:
         model=NotificationInbox
         fields=('user','message','msg_generated_date')
 
-class RewardSerializer(serializers.ModelSerializer):
-    user=serializers.CharField(source='user.user')
+class GifterRankingSerializer(serializers.ModelSerializer):
+    gift_user=serializers.CharField(source='gift_user.user')
     class Meta:
-        model=Reward
-        fields=('user','rewards_point',)   
-        
+        model=GifterRanking
+        fields=('gift_user','gifter_point')

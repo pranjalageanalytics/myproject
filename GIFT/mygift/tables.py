@@ -9,7 +9,7 @@ class UserTypeTable(Table):
     organization = Column(field='organization', header='Contact Number')
     contact_number = Column(field='contact', header='Website')
     website = Column(field='website', header='Status')
-    status = Column(field='host_permission', header='Email',attrs = {'class':'status',},sortable=True)
+    status = Column(field='host_permission', header='email',attrs = {'class':'status',},sortable=True)
 
     email = Column(field='user.email', header='View')
     view = Column(field='view',header='',attrs = {'class':'fa fa-file-text','id':'view','title':'view','data-toggle':'modal','data-target':'#myModal',},sortable=False)
@@ -18,12 +18,14 @@ class UserTypeTable(Table):
 #                                                    'title':'reject'},sortable=False)
 class UserType1(Table):
     Number = Column(header='ID' , attrs={'id':'number'})
-    ID = Column(field='user.pk', header='Email',sortable=True,attrs={'hidden':True})
+    ID = Column(field='user.pk', header='email',sortable=True,attrs={'hidden':True})
     email = Column(field='user.email', header='Gender')
     gender = Column(field='gender', header='Contact')
     contact_number = Column(field='contact', header='View')
-#    date_of_birth = Column(field='date_of_birth', header='View')
+    #date_of_birth = Column(field='date_of_birth', header='View')
+    #status = Column(field='host_permission', header='email',attrs = {'class':'status',},sortable=True)
     status = Column(field='host_permission', header='',attrs={'class':'status','hidden':True},sortable=True,visible=False)
+
     
     view = Column(field='view',header='',attrs = {'class':'fa fa-file-text','id':'view','title':'view','data-toggle':'modal','data-target':'#myModal',},sortable=False)
     
@@ -59,6 +61,6 @@ class notificationTable(Table):
     status= Column(field='unread', header='',attrs={'id':'status'},visible=False)
     
     
-    view = Column(field='view',header='',attrs = {'class':'fa fa-file-text','id':'view','title':'view','data-toggle':'modal','data-target':'#myModal',},sortable=False)
-    
+    view = Column(field='view',header='',attrs = {'class':'fa fa-file-text','id':'view','title':'view','data-toggle':'modal','data-target':'#myModal',},sortable=False)    
+
 

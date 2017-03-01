@@ -2,12 +2,6 @@
 
 {%block styleBlock%}
 <style type="text/css">
-.main-footer {
-    background: #fff;
-    padding: 3px !important;
-    color: #444;
-    border-top: 1px solid #d2d6de;
-}
 
 .modal-footer {
     padding: 66px;
@@ -186,50 +180,53 @@ $(".fa").on("click", function() {
 	});
 	
 	function hostview(url,gift_id){
-		$.ajax({
-			  url : url,
-			  type : "GET",
-			  data:{'gift_id' : host_id}
-			  }) 
-			  .done(function(data) {
-				$.each(data,function(key ,value){
-                                         console.log(value.rate);
-					 $('#txt').val(value.rate);
-					var val0=value.auth.hometown;
-					console.log(val0);	
-				   
-					$('#id_hometown').val(value.auth.hometown);
-					$('#id_date_of_birth').val(value.auth.date_of_birth);
-					 $('#id_full_name').val(value.auth.full_name);
-					   $('#id_organization').val(value.auth.organization);
-					   $('#id_contact').val(value.auth.contact);
-					   $('#id_website').val(value.auth.website);
-					   
-					   
-					   
-					   $('#id_occupation').val(value.auth.occupation);
-					   $('#id_user').val(value.auth1);
-			          	  $('#id_gender').val(value.auth.gender);
+  $.ajax({
+     url : url,
+     type : "GET",
+     data:{'gift_id' : host_id}
+     }) 
+     .done(function(data) {
+    $.each(data,function(key ,value){
+     
+     var val0=value.auth.hometown;
+     console.log(val0); 
+       
+     $('#id_hometown').val(value.auth.hometown);
+     $('#id_date_of_birth').val(value.auth.date_of_birth);
+      $('#id_full_name').val(value.auth.full_name);
+        $('#id_organization').val(value.auth.organization);
+        $('#id_contact').val(value.auth.contact);
+        $('#id_website').val(value.auth.website);
+	 $('#txt').val(value.rate);
+        
+        
+        
+        $('#id_occupation').val(value.auth.occupation);
+        $('#id_user').val(value.auth1);
+                $('#id_gender').val(value.auth.gender);
 
 
-				   console.log(data);
-				
-				   var msg = value.auth.image
-				   if(msg.startsWith("./"))
-			       { 
-			      var newVal=msg.split(".");
-			      var Val=("/media".concat(newVal[1])).concat(".".concat(newVal[2]));
-			      $('#id_image').attr('src',Val);}
-			     else{
-			      var word=msg.split(",");
-			      $('#id_image').attr('src',word[1]);
-			      }
-				   
-				   
-				   });
-				   
-				   });
-	}	
+       console.log(data);
+    
+       var msg = data[0].image
+       if(msg.startsWith("./"))
+          { 
+         var newVal=msg.split(".");
+         var Val=("/media".concat(newVal[1])).concat(".".concat(newVal[2]));
+         $('#id_image').attr('src',Val);}
+        else{
+         var word=msg.split(",");
+         $('#id_image').attr('src',word[1]);
+         }
+       
+       
+       });
+       
+       });
+ } 
+
+
+
 	function hostapprove(url,host_id){
 		$.ajax({
 			  url : url,
@@ -341,10 +338,10 @@ $(".fa").on("click", function() {
 										</div>
 										<div>
 										<input type="image" id="id_image" class="image" height="120" width="150" style="margin-left: 800px;border-radius:90%;">
-											</br><span id="star" style="float:right;margin-right:75px;">
-												<img  src="/static/img/star.jpg" style="height:30px;width:30px;"></img>
-												<input type="text" id="txt" style="border:none;">
-												</span>
+</br><span id="star" style="float:right;margin-right:75px;">
+            <img  src="/static/img/star.jpg" style="height:30px;width:30px;"></img>
+            <input type="text" id="txt" style="border:none;">
+            </span>
 									</div>
 								</div>
 										<!-- <input type="image" src="../../static/img/Lighthouse_qBv0cYV.jpg">  -->

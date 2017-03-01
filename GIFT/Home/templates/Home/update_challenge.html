@@ -230,10 +230,23 @@ $(document).ready(function(){
      
     <div class="form-group">
       <label for="name">Title<span style="color:red;">*</span></label>
-     <input type="text" class="form-control1 fsize" name="title" id="title"  value="{{data.challenge.title}}">
+     <input type="text" class="form-control1 fsize" name="title" id="title"  value= "{{data.challenge.title}}">
      <div id="errortitle" style="color:red;"></div>
     </div>
     
+
+<div class="form-group">
+    <label for="name">Add your Own image<span style="color:red;">*</span></label>
+ <input type="file" class="form-control1 fsize" name="image" id="image" >
+     <!-- <input type='file' onchange="readURL(this);" /> -->
+    <!-- <input type="file" name="file" id="file" onchange="imgchange(this)"> -->
+   <!--  <img id="blah" src="#" alt="your image" /> -->
+   <!-- <img id="imgs" width="170px" height="160px" ></img>-->
+   
+   
+       <div id="errorimage" style="color:red;"></div>
+   <img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
+</div>    
 
 <div class="form-group">
    <label for="name">Challenge Start Date<span style="color:red;">*</span></label>
@@ -272,13 +285,6 @@ $(document).ready(function(){
    <input type="text" class="form-control1 fsize timepicker1" name="end_time" id="timepicker1" value={{data.challenge.end_time}}> 
    <img src="{% static 'image/gift icon/clock.png' %}"  class="clock" style="margin-left:294px; margin-top: -58px;color:#0072BC">
 </div>
-
-<div class="form-group">
-      <label for="name">No of Volunteers<span style="color:red;">*</span></label>
-     <input type="text" class="form-control1 fsize" name="requested_volunteers" id="requested_volunteers" value={{data.challenge.requested_volunteers}}>
-     <div id="errorvolunteer" style="color:red;"></div>
- </div> 
-
 </div>
 
 
@@ -319,7 +325,7 @@ $(document).ready(function(){
   
 <div class="form-group">
       <label for="name">Venue<span style="color:red;">*</span></label>
-     <input type="text" class="form-control1 fsize" name="venue" id="venue" value="{{data.challenge.venue}}">
+     <input type="text" class="form-control1 fsize" name="venue" id="venue" value= "{{data.challenge.venue}}">
      <div id="errorvenue" style="color:red;"></div>
  </div>
  <br>
@@ -346,7 +352,11 @@ $(document).ready(function(){
      <input type="text" class="form-control1 fsize" name="description" id="description" value="{{data.challenge.description}}">
  </div>
 <br>
-
+<div class="form-group">
+      <label for="name">No of Volunteers<span style="color:red;">*</span></label>
+     <input type="text" class="form-control1 fsize" name="requested_volunteers" id="requested_volunteers" value={{data.challenge.requested_volunteers}}>
+     <div id="errorvolunteer" style="color:red;"></div>
+ </div> 
  </div>
  </div> 
 </form>
@@ -355,18 +365,9 @@ $(document).ready(function(){
     
      
      {% csrf_token %}
-     <div class="col-md-6" style="margin-left: -15px;">
-
-     <div class="form-group">
-
-     <label id="challenge_photo">Add Image</label>
+     <label id="challenge_photo"></label>
      {{frm.picture}}
-     <img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -47px;color:#0072BC">
-    
-     </div>
-     </div>
-
-   </form>     
+     </form>     
 
  <div class="submit">
        <button type="button" class="btn1 btn-default submit" id="sub" style="background-color: #0072BC;color: white;width: 97px;height: 33px;margin-bottom: 18px;">Update</button>

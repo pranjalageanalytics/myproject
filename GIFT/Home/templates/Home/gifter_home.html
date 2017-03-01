@@ -185,14 +185,11 @@ function myFunction() {
 <div style="padding-left: 80px; font-size=16px;" class="abc">Registration Closes on - {{obj.challenge.reg_expire_date}}</div>
 
 </div><!-- end col -->
-
 {% if obj.challenge.reg_expire_date > date|date:"Y-m-d" %}
 <div class="infobtn">
 <button type="button" class=" btn btn-primary challbtn modal_get infobtn1 {{obj.pk}}" id="{{ forloop.counter0 }}"  style="width: 14%;"  data-toggle="modal" data-target="#joinmodal{{ forloop.counter0 }}" >JOIN</button>
 </div>
-  
-{% endif %}
-
+  {% endif %}
 <div class="modal fade" id="joinmodal{{ forloop.counter0 }}" role="dialog">
     <div class="modal-dialog modal-sm">
        <div class="modal-content" style="margin-top: 231px;">
@@ -306,21 +303,16 @@ function myFunction() {
 </h4></div>
 <div style="padding-left: 40px;"><h4><b>Venue:&nbsp;</b>{{obj.challenge.venue}}</h4></div>
 <div style="padding-left: 40px;"><h4><b>Contact:&nbsp;</b>{{obj.challenge.contact_no}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Description:&nbsp;</b>{{obj.challenge.description}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Direction:&nbsp;</b>{{obj.challenge.direction}}</h4></div>
-
 {% for key, value in obj.user.items %}
 <div style="padding-left: 40px;"><h4><b>Email:&nbsp;</b>{{value.email}}</h4></div>
 <div style="padding-left: 40px;"><h4><b>Host rating:&nbsp;</b>{{obj.host_rating.host_rating}}&nbsp;<img src="{% static 'image/rank1.png' %}"></h4></div>
 {% endfor %}
 <div style="padding-left: 40px;"font-size:20px; color: #0072BC;"><h4><b>Registration Closes on:</b>&nbsp;{{obj.challenge.reg_expire_date}}</h4></div>
-
 </div><!-- end col -->
 </div><!-- end row -->
 
 <br>
 <div class="row">
-
 {% if obj.challenge.reg_expire_date > date|date:"Y-m-d" %}
 <div class="col-md-4">
 <button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.pk}}"  id="{{ forloop.counter0 }}"  data-toggle="modal" data-target="#accmodal{{ forloop.counter0 }}" style="width:80%;margin-left: 30px"name="accept">ACCEPT</button>
@@ -333,11 +325,9 @@ function myFunction() {
 <div class="col-md-4">
 <button type="button" class="btn btn-primary challbtn share-btn infobtn1 {{obj.pk}}"  id="{{ forloop.counter0 }}"  data-toggle="modal" data-target="#tenmodal{{ forloop.counter0 }}" style="width:80%;" name="">TENTATIVE</button>
 </div>
-
 {% else %}
 
 {% endif %}
-
 </div><!-- End Row -->
 
 <br>

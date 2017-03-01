@@ -24,8 +24,6 @@ $(document).ready(function(){
 });
 
 
-
-
 </script>
 
 
@@ -216,12 +214,10 @@ $(document).on('click', '.browse', function(){
     <div class="select1" style="margin-right: 335px;">------ Category ------</div>
     <div class="img"> <span><img src="{% static 'image/gift icon/caret-down.png' %}" height="20px" width = "20px" style=" margin-left: 253px;margin-top:-15%;"></span></div></button>
     <ul class="dropdown-menu scrollable-menu " role="menu" aria-labelledby="menu1" style="min-width: 310px;">
-    
     {% for c in obj%}
   
       <li class="list-group-item "><label>{{c.category_name}}</label><input type="checkbox" id="check" class="ckeckm demo faChkRnd1 pull-right" name="category" value="{{c.category_id}}"></li>
-      
-    {% endfor %} 
+      	{% endfor %} 
     </ul>
      <div id="errorcategory" style="color:red;"></div>
   </div>
@@ -270,11 +266,6 @@ $(document).on('click', '.browse', function(){
      <input type="text" class="form-control1 fsize" name="description" id="description" placeholder="Discription">
  </div>
 <br>
-<!--<div class="form-group">
-      <label for="name">No of Volunteers<span style="color:red;">*</span></label>
-     <input type="text" class="form-control1 fsize" name="requested_volunteers" id="requested_volunteers" placeholder="No of Volunteers">
-     <div id="errorvolunteer" style="color:red;"></div>
- </div>-->
  </div>
  </div>  
 
@@ -287,16 +278,17 @@ $(document).on('click', '.browse', function(){
      <div class="col-md-6" style="margin-left: -15px;">
 
      <div class="form-group">
-     <label for="name">Add Image</label>
-        
+      <label for="name">Add Image</label>
+    
+     
      {{frm.picture}}
        
-     <img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -47px;color:#0072BC">
+	<img src="{% static 'image/gift icon/camera.png' %}" style="margin-left: 294px;margin-top: -58px;color:#0072BC">
 
      </div>
      </div>
+      
      </form> 
-
  <div class="submit">
           <button type="button" class="btn1 btn-default submit" id="sub" style="background-color: #0072BC;color: white;width: 97px;height: 33px;margin-bottom: 18px;">Submit</button>
           

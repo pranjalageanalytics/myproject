@@ -3,17 +3,8 @@ $(document).ready(function(){
 	//alert("hiii");
 	$("#login-form").click(function(){
 		//alert("hiii in click");
-		
-		var emailvalue = document.getElementById('email').value
-    	//alert("date value is -- " + emailvalue);
-		
-		var passvalue = document.getElementById('pass3').value
-    	//alert("date value is -- " + passvalue);
-		
 		flag = true;
-		
-			
-		if(emailvalue==""){
+		if(email.value==""){
   			$("#error1").show();
   			
   			   document.getElementById('error1').innerHTML=" This field is required!";
@@ -28,7 +19,7 @@ $(document).ready(function(){
                document.getElementById("email").style.borderColor = "#ccc";
              } 
           
-		 if(passvalue==""){
+		 if(pass3.value==""){
 			    $("#error3").show();
 	   		       document.getElementById('error3').innerHTML=" This field is required!";
 	   		        document.getElementById("pass3").style.borderColor = "#E34234";

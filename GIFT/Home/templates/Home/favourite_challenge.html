@@ -276,8 +276,6 @@ function myFunction() {
 </div>
 <div style="padding-left: 40px;"><h4><b>Venue:&nbsp;</b>{{obj.user_challenge_category_location.challenge.venue}} </h4></div>
 <div style="padding-left: 40px;"><h4><b>Contact:&nbsp;</b>{{obj.user_challenge_category_location.challenge.contact_no}} </h4></div>
-<div style="padding-left: 40px;"><h4><b>Description:&nbsp;</b>{{obj.user_challenge_category_location.challenge.description}}</h4></div>
-<div style="padding-left: 40px;"><h4><b>Direction:&nbsp;</b>{{obj.user_challenge_category_location.challenge.direction}}</h4></div>
 {% for key, value in obj.user_challenge_category_location.user.items %}
 <div style="padding-left: 40px;"><h4><b>Email:&nbsp;</b>{{value.email}}</h4></div>
 {% endfor %}

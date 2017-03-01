@@ -64,7 +64,8 @@ class ChallengeCreatorRankingRel(models.Model):
 class ChallengeType(models.Model):
     challenge_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=70, blank=True, null=True)
-    photo = models.CharField(max_length=500, blank=True, null=True)   
+    photo = models.CharField(max_length=500, blank=True, null=True)
+   
     start_date = models.DateField(blank=True, null=True)
     post_date = models.DateTimeField(default=timezone.now())
     end_date = models.DateField(blank=True, null=True)
@@ -167,6 +168,7 @@ class GifterRanking(models.Model):
         managed = False
         db_table = 'gifter_ranking'
 
+
 class GifterRating(models.Model):
     gift_user = models.ForeignKey(AuthUserGroups, models.DO_NOTHING, db_column='gift_user', blank=True, null=True)
     gifter_rating = models.FloatField(blank=True, null=True)
@@ -174,6 +176,8 @@ class GifterRating(models.Model):
     class Meta:
         managed = False
         db_table = 'gifter_rating'
+
+
 
 class GiftergoalType(models.Model):
     user = models.ForeignKey(AuthUserGroups, models.DO_NOTHING, db_column='user', blank=True, null=True)
@@ -205,13 +209,18 @@ class HostRanking(models.Model):
         managed = False
         db_table = 'host_ranking'
 
+
+
 class HostRating(models.Model):
     user = models.ForeignKey(AuthUserGroups, models.DO_NOTHING, db_column='user', blank=True, null=True)
     host_rating = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'host_rating'        
+        db_table = 'host_rating'
+
+
+        
         
 class HostUserType(models.Model):
     organization = models.CharField(max_length=200, blank=True, null=True)
@@ -278,7 +287,8 @@ class RankType(models.Model):
 
     def __str__(self):
         return str(self.rank) or u''
-    
+
+
 class Reward(models.Model):
     user = models.ForeignKey(AuthUserGroups, models.DO_NOTHING, db_column='user', blank=True, null=True)
     rewards_point = models.IntegerField(blank=True, null=True)
@@ -286,7 +296,6 @@ class Reward(models.Model):
     class Meta:
         managed = False
         db_table = 'reward'
-
 
 class StatusType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -327,7 +336,7 @@ class UserChallengeCategoryLocationRelRel(models.Model):
     status = models.ForeignKey(StatusType, models.DO_NOTHING, db_column='status', blank=True, null=True)
     photo = models.ImageField(blank=True, null=True, default= './learn_to_run.jpg',)
     photo1 = models.ImageField(max_length=500, blank=True, null=True)
-    host_rating = models.ForeignKey(HostRating, models.DO_NOTHING, db_column='host_rating', blank=True, null=True) 
+    host_rating = models.ForeignKey(HostRating, models.DO_NOTHING, db_column='host_rating', blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'user_challenge_category_location_rel_rel'
@@ -361,7 +370,7 @@ class UserType(models.Model):
     hometown = models.CharField(max_length=60, blank=True, null=True)
     display_name = models.CharField(max_length=200, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    image = models.ImageField(blank=True, null=True,default= './user_profile.jpg')
+    image = models.ImageField(blank=True, null=True,default= './user_profile.png')
     gender = models.CharField(max_length=45, blank=True, null=True)
     full_name = models.CharField(max_length=200, blank=True, null=True)
     alias = models.CharField(max_length=100, blank=True, null=True)
@@ -390,6 +399,11 @@ class UserRankingRel(models.Model):
     class Meta:
         managed = False
         db_table = 'user_ranking_rel'
+
+
+
+
+
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=70)

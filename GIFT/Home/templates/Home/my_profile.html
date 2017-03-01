@@ -79,8 +79,7 @@ $(document).ready(function(){
    
       {% else %}
        
-     <a href="{% url 'home:host_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Host</button> </a>
-   {% endif %}
+     <a href="{% url 'home:host_toggle' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;"> Switch Host</button> </a>   {% endif %}
     </div>		 
 		</div>  
 		<hr>
@@ -130,7 +129,7 @@ $(document).ready(function(){
    
 
       
-       <img src="{{object.image}}" style="  border-radius: 50%; margin-left: 50%;height: 70px; width: 70px; margin-top: -56px;">  
+       <img src="{{object.image}}" style="  border-radius: 50%; margin-left: 50%;height: 70px; width: 70px; margin-top: -56px;">    
    </div>
 
 
@@ -155,7 +154,7 @@ $(document).ready(function(){
       {% endif %}
       <img id="img_logo" src="{% static 'image/favorite.png' %}"><!-- <input type="text" class="form-control fsize " id="text" disabled name="gifter_rating" value={{object_rating}}> -->
      </div>
-      <b><input id="login_lost_btn" type="button" class="btn btn-link" style="padding-left:0px;"><a href="{% url 'home:reset_password_save' %}">Change Password?</b></a>     
+     <b><input id="login_lost_btn" type="button" class="btn btn-link" style="padding-left:0px;"><a href="{% url 'home:reset_password_save' %}">Change Password?</b></a>     
     </div>
      
     </div>
@@ -175,8 +174,7 @@ $(document).ready(function(){
   
         <div class="submitbtn">
           <a href="{% url 'home:gifter_update' %}"><button type="submit" id="gifter_update" class="btn1 btn-default" style="background-color: #0072BC;color: white;width: 97px;height: 33px;">Update</button></a>&nbsp;
-         <a href="{% url 'home:gifter' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;">Cancel</button></a>
-        </div> 
+          <a href="{% url 'home:gifter' %}" type="button" class="btn1 btn-default" style="background-color: #0072BC;color: white; padding:7px 26px 9px 26px;">Cancel</button></a>        </div> 
 </form>     
 </div>
 

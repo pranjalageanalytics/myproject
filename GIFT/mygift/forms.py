@@ -29,9 +29,9 @@ class CategoryLocationRelForm(forms.Form):
     location = forms.CharField(required=True,widget=forms.Textarea(attrs={'class':'form-control viewOnlyAccess','rows':'1'}))
     
 # class UserTypeForm(forms.Form):
-#     organization = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control col-sm-3 viewOnlyAccess'}))
+#     organization = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control col-sm-3 viewOnlyAccess','rows':'1'}))
 #     contact = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control col-sm-3 viewOnlyAccess'}))
-#     website = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control col-sm-3 viewOnlyAccess','rows':'1'}))
+#     website = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control col-sm-3 viewOnlyAccess'}))
 #     user = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control col-sm-3 viewOnlyAccess'}))
     
 class  AuthUserForm(forms.Form):
